@@ -10,6 +10,7 @@ struct memory{
 	size_t size;
 };
 
+struct internalInfo;
 typedef struct CRAW_Reddit_Bot_Info{
 	const char *client_id;
 	const char *secret_key;
