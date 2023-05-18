@@ -23,9 +23,9 @@ char *grabData(CRAW *handle, const char *url){
         struct memory chunk={0};
 	char *authString;
 	authString="Authorization: bearer ";
-	char *buffer=malloc(strlen(authString)+strlen(handle->access_token)+1);
+	char *buffer=malloc(strlen(authString)+strlen(handle->internal->access_token)+1);
 	strcpy(buffer, authString);
-	strcat(buffer, handle->access_token);
+	strcat(buffer, handle->internal->access_token);
 	struct curl_slist *list=NULL;
         curl_easy_setopt(curlhandle, CURLOPT_URL, url);
         curl_easy_setopt(curlhandle, CURLOPT_WRITEFUNCTION, cb);

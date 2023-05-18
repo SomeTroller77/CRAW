@@ -23,7 +23,8 @@ static size_t cb(void *buf, size_t size, size_t count, void *userp){
 
 CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *username, const char *password, const char *user_agent){
 	struct memory chunk={0};
-	CRAW *handle=(CRAW*) malloc(sizeof(CRAW));
+	CRAW *handle=(CRAW*) malloc(sizeof(CRAW)+1);
+	handle->internal=(struct internalInfo *)malloc(sizeof(struct internalInfo)+1);
 	if(handle == NULL) {
 		return NULL;
 	}
@@ -45,15 +46,20 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
 	curl_easy_setopt(curlhandle, CURLOPT_USERAGENT, handle->user_agent);
 	curl_easy_setopt(curlhandle, CURLOPT_POSTFIELDS, postString);
 	res=curl_easy_perform(curlhandle);
-	const cJSON *access_tokenTest=NULL;
+	const cJSON *access_tokenBuf=NULL;
 	cJSON *monitor_json=cJSON_Parse(chunk.response);
-	access_tokenTest=cJSON_GetObjectItemCaseSensitive(monitor_json, "access_token");
-	handle->access_token=access_tokenTest->valuestring;
+	access_tokenBuf=cJSON_GetObjectItemCaseSensitive(monitor_json, "access_token");
+	handle->internal->access_token=access_tokenBuf->valuestring;
+	cJSON_Delete(monitor_json);
 	curl_easy_cleanup(curlhandle);
 	return handle;
 }
 
-
+int CRAW_free(CRAW *handle){
+	free(handle->internal);
+	free(handle);
+	return CRAW_OK;
+}
 
 static char *replaceWord(const char* s, const char* oldW, const char* newW)
 {
@@ -91,3 +97,5 @@ static char *replaceWord(const char* s, const char* oldW, const char* newW)
     result[i] = '\0';
     return result;
 }
+
+

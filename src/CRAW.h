@@ -11,15 +11,17 @@ struct memory{
 };
 
 typedef struct CRAW_Reddit_Bot_Info{
-	char *client_id;
-	char *secret_key;
-	char *username;
-	char *password;
-	char *user_agent;
-	char *access_token;
+	const char *client_id;
+	const char *secret_key;
+	const char *username;
+	const char *password;
+	const char *user_agent;
+	struct internalInfo *internal;
 } CRAW;
 
-
+struct internalInfo{
+	const char *access_token;
+};
 CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *username, const char *password, const char *user_agent);
 static char *replaceWord(const char* s, const char* oldW, const char* newW);
 #endif
