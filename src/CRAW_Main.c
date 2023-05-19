@@ -3,7 +3,12 @@
 #include<curl/curl.h>
 #include "CRAW.h"
 #include<cjson/cJSON.h>
-
+#include<stdlib.h>
+#ifdef _WIN32
+#include<Windows.h>
+#else
+#include<unistd.h>
+#endif
 static size_t cb(void *buf, size_t size, size_t count, void *userp){
 	size_t realbytes=count*size;
 	struct memory *mem=(struct memory *)userp;
@@ -23,6 +28,11 @@ static size_t cb(void *buf, size_t size, size_t count, void *userp){
 
 CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *username, const char *password, const char *user_agent){
 	struct memory chunk={0};
+	#ifdef __WIN32
+	Sleep(1000);
+	#else
+	sleep(1);
+	#endif
 	CRAW *handle=(CRAW*) malloc(sizeof(CRAW)+1);
 	handle->internal=(struct internalInfo *)malloc(sizeof(struct internalInfo)+1);
 	if(handle == NULL) {
@@ -49,6 +59,9 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
 	const cJSON *access_tokenBuf=NULL;
 	cJSON *monitor_json=cJSON_Parse(chunk.response);
 	access_tokenBuf=cJSON_GetObjectItemCaseSensitive(monitor_json, "access_token");
+	if(access_tokenBuf == NULL){
+		return NULL;
+	}
 	handle->internal->access_token=access_tokenBuf->valuestring;
 	cJSON_Delete(monitor_json);
 	curl_easy_cleanup(curlhandle);
