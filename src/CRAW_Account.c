@@ -1,7 +1,7 @@
 #include<stdio.h>
-#include "CRAW_Account.h"
+#include "../include/CRAW_Account.h"
 #include<curl/curl.h>
-#include<cjson/cJSON.h>
+#include<../include/cJSON.h>
 #include<stdlib.h>
 #ifdef _WIN32
 #include<Windows.h>

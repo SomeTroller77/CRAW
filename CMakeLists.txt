@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0.0)
 
 project(CRAW VERSION 0.1 DESCRIPTION "C Reddit API Wrapper")
 
-add_library(${PROJECT_NAME} SHARED src/cJSON.c src/CRAW_Main.c src/CRAW_Account.c src/CRAW.h src/CRAW_Account.h include/cJSON.h)
+add_library(${PROJECT_NAME} SHARED src/cJSON.c src/CRAW_Main.c src/CRAW_Account.c include/CRAW.h include/CRAW_Account.h include/cJSON.h)
 
 target_include_directories(${PROJECT_NAME} PRIVATE include)
 
@@ -19,6 +19,6 @@ endif()
 
 set_target_properties(CRAW PROPERTIES PUBLIC_HEADER "include/CRAW.h;include/CRAW_Account.h")
 
-install(TARGETS CRAW LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/CRAW)
+install(TARGETS CRAW LIBRARY DESTINATION lib ${CMAKE_INSTALL_LIBDIR} PUBLIC_HEADER DESTINATION include ${CMAKE_INSTALL_INCLUDEDIR})
 
 

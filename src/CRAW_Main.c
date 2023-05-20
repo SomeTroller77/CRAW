@@ -1,8 +1,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<curl/curl.h>
-#include "CRAW.h"
-#include<cjson/cJSON.h>
+#include "../include/CRAW.h"
+#include<../include/cJSON.h>
 #include<stdlib.h>
 #ifdef _WIN32
 #include<Windows.h>
