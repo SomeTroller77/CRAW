@@ -26,7 +26,8 @@ struct internalInfo{
 typedef enum CRAW_error_codes{
 	CRAW_OK,
 	CRAW_PARSE_ERROR,
-	CRAW_TOKEN_ERROR
+	CRAW_TOKEN_ERROR,
+	CRAW_GRAB_ERROR
 } CRAWcode;
 
 CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *username, const char *password, const char *user_agent);
