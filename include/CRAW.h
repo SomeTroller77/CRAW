@@ -29,6 +29,6 @@ typedef enum CRAW_error_codes{
 } CRAWcode;
 
 CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *username, const char *password, const char *user_agent);
-int CRAW_free(CRAW *handle);
+CRAWcode CRAW_free(CRAW *handle);
 static char *replaceWord(const char* s, const char* oldW, const char* newW);
 #endif

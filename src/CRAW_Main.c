@@ -29,7 +29,7 @@ static size_t cb(void *buf, size_t size, size_t count, void *userp){
 
 CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *username, const char *password, const char *user_agent){
 	struct memory chunk={0};
-	#ifdef __WIN32
+	#ifdef _WIN32
 	Sleep(1000);
 	#else
 	sleep(1);
@@ -69,7 +69,7 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
 	return handle;
 }
 
-int CRAW_free(CRAW *handle){
+CRAWcode CRAW_free(CRAW *handle){
 	free(handle->internal);
 	free(handle);
 	return CRAW_OK;

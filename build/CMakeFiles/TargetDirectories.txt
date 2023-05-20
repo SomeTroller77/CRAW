@@ -1,0 +1,7 @@
+/data/data/com.termux/files/home/coding/C_Programming/Projects/CRAW/build/CMakeFiles/CRAW.dir
+/data/data/com.termux/files/home/coding/C_Programming/Projects/CRAW/build/CMakeFiles/edit_cache.dir
+/data/data/com.termux/files/home/coding/C_Programming/Projects/CRAW/build/CMakeFiles/rebuild_cache.dir
+/data/data/com.termux/files/home/coding/C_Programming/Projects/CRAW/build/CMakeFiles/list_install_components.dir
+/data/data/com.termux/files/home/coding/C_Programming/Projects/CRAW/build/CMakeFiles/install.dir
+/data/data/com.termux/files/home/coding/C_Programming/Projects/CRAW/build/CMakeFiles/install/local.dir
+/data/data/com.termux/files/home/coding/C_Programming/Projects/CRAW/build/CMakeFiles/install/strip.dir
