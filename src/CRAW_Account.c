@@ -32,6 +32,9 @@ char *grabData(CRAW *handle, const char *url){
 	char *authString;
 	authString="Authorization: bearer ";
 	char *buffer=malloc(strlen(authString)+strlen(handle->internal->access_token)+1);
+	if (buffer == NULL) {
+    	    return NULL;
+	}
 	strcpy(buffer, authString);
 	strcat(buffer, handle->internal->access_token);
 	#ifdef _WIN32
@@ -48,19 +51,26 @@ char *grabData(CRAW *handle, const char *url){
 	curl_easy_setopt(curlhandle, CURLOPT_HTTPHEADER, list);
         res=curl_easy_perform(curlhandle);
 	curl_slist_free_all(list);
-        curl_easy_cleanup(curlhandle);
-        return chunk.response;
+	curl_easy_cleanup(curlhandle);
+	free(buffer); // Free the buffer before return
+	return chunk.response;
 }
 
-CRAW_Account *CRAW_Account_Init(){
-	CRAW_Account *handle=malloc(sizeof(CRAW_Account)+1);
+CRAW_Account *handle=malloc(sizeof(CRAW_Account)+1);
+	if (handle == NULL) {
+	    return NULL;
+	}
 	return handle;
-}
 CRAWcode CRAW_Account_me(CRAW *handle, CRAW_Account *accHandle) {
 	char *json=grabData(handle, "https://oauth.reddit.com/api/v1/me");
+	if (json == NULL) {
+	    return CRAW_PARSE_ERROR;
+	    //return CRAW_GRAB_ERROR;  // TO DO: add this error code
+	}
 	cJSON *monitor_json=cJSON_Parse(json);
 	if(monitor_json == NULL){
-		return CRAW_PARSE_ERROR;
+	    free(json); // Free json before returning
+	    return CRAW_PARSE_ERROR;
 	}
 	const cJSON *name=NULL;
 	const cJSON *total_karma=NULL;
