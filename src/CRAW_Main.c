@@ -36,9 +36,12 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
 	#endif
 	CRAW *handle=(CRAW*) malloc(sizeof(CRAW)+1);
 	handle->internal=(struct internalInfo *)malloc(sizeof(struct internalInfo)+1);
-	if(handle == NULL) {
-		return NULL;
-	}
+	if(handle == NULL || handle->internal == NULL) {
+	   if (handle != NULL) {
+		free(handle);
+	   }
+	return NULL;
+        }
 	handle->client_id=client_id;
 	handle->secret_key=secret_key;
 	handle->username=username;
@@ -66,6 +69,7 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
 	handle->internal->access_token=access_tokenBuf->valuestring;
 	cJSON_Delete(monitor_json);
 	curl_easy_cleanup(curlhandle);
+	free(postString); // Free the memory
 	return handle;
 }
 
