@@ -60,19 +60,31 @@ CRAWcode CRAW_Account_me(CRAW *handle, CRAW_Account *accHandle) {
 	char *json=grabData(handle, "https://oauth.reddit.com/api/v1/me");
 	cJSON *monitor_json=cJSON_Parse(json);
 	if(monitor_json == NULL){
-		return CRAW_ERROR;
+		return CRAW_PARSE_ERROR;
 	}
 	const cJSON *name=NULL;
 	const cJSON *total_karma=NULL;
 	const cJSON *id=NULL;
 	const cJSON *created_utc=NULL;
 	name=cJSON_GetObjectItemCaseSensitive(monitor_json, "name");
+	if(name == NULL){
+		return CRAW_TOKEN_ERROR;
+	}
 	accHandle->name=name->valuestring;
 	total_karma=cJSON_GetObjectItemCaseSensitive(monitor_json, "total_karma");
+	if(total_karma == NULL){
+		return CRAW_TOKEN_ERROR;
+	}
 	accHandle->total_karma=total_karma->valuedouble;
 	created_utc=cJSON_GetObjectItemCaseSensitive(monitor_json, "created_utc");
+	if(created_utc == NULL){
+		return CRAW_TOKEN_ERROR;
+	}
 	accHandle->created_utc=created_utc->valuedouble;
 	id=cJSON_GetObjectItemCaseSensitive(monitor_json, "id");
+	if(id == NULL){
+		return CRAW_TOKEN_ERROR;
+	}
 	accHandle->id=id->valuestring;
 	cJSON_Delete(monitor_json);
 	return CRAW_OK;

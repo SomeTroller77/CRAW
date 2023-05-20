@@ -1,0 +1,1 @@
+/data/data/com.termux/files/usr/bin/cc -fPIC -O2 -g -DNDEBUG -shared -Wl,-soname,libCRAW.so -o libCRAW.so CMakeFiles/CRAW.dir/src/cJSON.c.o CMakeFiles/CRAW.dir/src/CRAW_Main.c.o CMakeFiles/CRAW.dir/src/CRAW_Account.c.o  /data/data/com.termux/files/usr/lib/libcurl.so 
