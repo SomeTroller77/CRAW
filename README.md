@@ -1,10 +1,14 @@
-## CRAW (C Reddit API Wrapper)
+# CRAW (C Reddit API Wrapper)
 ![GitHub repo size](https://img.shields.io/github/repo-size/SomeTroller77/CRAW)
 
 CRAW is a Reddit API Wrapper that is being developed in C to scrape data from reddit and make bots in C.
 
 It is still under development and you can only use it to get your own data for now but i will be working on this project to develop it as soon and possible.
 You can build it and see if it works or not.
+## Table of contents
+- [How to build](#How-to-build)
+- [Structure and typedef names](#Data-Structures)
+- [Basic example](#Basic-example)
 
 ## How to build?
 
@@ -24,7 +28,7 @@ $ make
 
 And you have installed CRAW, lets see hoe you can use it
 
-##Data Structures
+## Data Structures
 
 CRAW uses struct to store the data. heres the table of the structs in C
 
