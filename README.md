@@ -38,6 +38,7 @@ CRAW uses struct to store the data. heres the table of the structs in C
 here are some stuff which is stored and usable in CRAW_Account struct pointer
 
 | Data type | Name | Description |
+| --------- | ---- | ----------- |
 | char * | id | its stores the reddit id of the account |
 | char * | name | it stores the username of the account |
 | long | created_utc | it stores the time of creation of account in EPOCH time |
