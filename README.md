@@ -34,6 +34,7 @@ CRAW uses struct to store the data. heres the table of the structs in C
 | CRAW_Account | It stores the account data which is sent by the reddit API |
 
 ##CRAW_Account
+
 here are some stuff which is stored and usable in CRAW_Account struct pointer
 
 | Data type | Name | Description |
