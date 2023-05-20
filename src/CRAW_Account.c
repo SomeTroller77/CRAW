@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include<string.h>
 #include "../include/CRAW_Account.h"
 #include<curl/curl.h>
 #include<../include/cJSON.h>

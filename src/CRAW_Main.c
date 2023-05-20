@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include<string.h>
 #include<stdlib.h>
 #include<curl/curl.h>
 #include "../include/CRAW.h"
