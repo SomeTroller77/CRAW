@@ -11,7 +11,13 @@ You can build it and see if it works or not.
 - [Basic example](#Basic-example)
 
 ## How to build?
+The project has a dependency of libcurl, it can be installed in linux by
 
+Ubuntu:
+```
+# sudo apt-get install curl
+# sudo apt-get install libcurl-dev
+```
 Clone this repo using
 ```
 git clone https://github.com/SomeTroller77/CRAW
