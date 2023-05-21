@@ -10,6 +10,8 @@
 #include<unistd.h>
 #endif
 
+
+
 static size_t cb(void *buf, size_t size, size_t count, void *userp){
         size_t realbytes=count*size;
         struct memory *mem=(struct memory *)userp;
@@ -25,7 +27,7 @@ static size_t cb(void *buf, size_t size, size_t count, void *userp){
 
 }
 
-char *grabData(CRAW *handle, const char *url){
+static char *grabData(CRAW *handle, const char *url){
         CURL *curlhandle=curl_easy_init();
         CURLcode res;
         struct memory chunk={0};
@@ -56,6 +58,18 @@ char *grabData(CRAW *handle, const char *url){
 	return chunk.response;
 }
 
+static CRAWcode check_http_code(long code){
+        if(code == 400){
+                return CRAW_BAD_REQUEST;
+        }
+        if(code == 401){
+                return CRAW_UNAUTHORISED;
+        }
+        else{
+                return CRAW_OK;
+        }
+}
+
 CRAW_Account *CRAW_Account_Init() {
 	CRAW_Account *handle=malloc(sizeof(CRAW_Account)+1);
 	if (handle == NULL) {
@@ -67,7 +81,7 @@ CRAW_Account *CRAW_Account_Init() {
 CRAWcode CRAW_Account_me(CRAW *handle, CRAW_Account *accHandle) {
 	char *json=grabData(handle, "https://oauth.reddit.com/api/v1/me");
 	if (json == NULL) {
-	    return CRAW_PARSE_ERROR;
+	    return check_http_code(handle->internal->error_code);
 	    //return CRAW_GRAB_ERROR;  // TO DO: add this error code
 	}
 	cJSON *monitor_json=cJSON_Parse(json);
@@ -75,6 +89,13 @@ CRAWcode CRAW_Account_me(CRAW *handle, CRAW_Account *accHandle) {
 	    free(json); // Free json before returning
 	    return CRAW_PARSE_ERROR;
 	}
+	const cJSON *error=NULL;
+	error=cJSON_GetObjectItemCaseSensitive(monitor_json, "error");
+	if(error != NULL){
+		handle->internal->error_code=(int) error->valuedouble;
+		return check_http_code(handle->internal->error_code);
+	}
+	handle->internal->error_code=0;
 	const cJSON *name=NULL;
 	const cJSON *total_karma=NULL;
 	const cJSON *id=NULL;
@@ -99,6 +120,9 @@ CRAWcode CRAW_Account_me(CRAW *handle, CRAW_Account *accHandle) {
 		return CRAW_TOKEN_ERROR;
 	}
 	accHandle->id=id->valuestring;
+	free(json);
 	cJSON_Delete(monitor_json);
-	return CRAW_OK;
+	return check_http_code(handle->internal->error_code);
 }
+
+
