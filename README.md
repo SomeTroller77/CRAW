@@ -6,7 +6,7 @@ CRAW is a Reddit API Wrapper that is being developed in C to scrape data from re
 It is still under development and you can only use it to get your own data for now but i will be working on this project to develop it as soon and possible.
 You can build it and see if it works or not.
 ## Table of contents
-- [Where to get client id and secret key](where-to-get-client-id-and-secret-key)
+- [Where to get client id and secret key](#where-to-get-client-id-and-secret-key)
 - [How to build](#How-to-build)
 - [Structure and typedef names](#Data-Structures)
 - [Basic example](#Basic-example)
