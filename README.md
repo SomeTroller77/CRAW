@@ -6,9 +6,15 @@ CRAW is a Reddit API Wrapper that is being developed in C to scrape data from re
 It is still under development and you can only use it to get your own data for now but i will be working on this project to develop it as soon and possible.
 You can build it and see if it works or not.
 ## Table of contents
+- [Where to get client id and secret key](where-to-get-client-id-and-secret-key)
 - [How to build](#How-to-build)
 - [Structure and typedef names](#Data-Structures)
 - [Basic example](#Basic-example)
+
+
+## where to get client id and secret key
+
+If you want to use this Wrapper, you need a reddit client id and secret key which you can get by going to https://reddit.com/prefs/apps and logging in with your credentials
 
 ## How to build?
 The project has a dependency of libcurl, it can be installed in linux by
@@ -43,7 +49,7 @@ CRAW uses struct to store the data. heres the table of the structs in C
 | CRAW | It is used to store the developers data that developers provide which will be used to send requests |
 | CRAW_Account | It stores the account data which is sent by the reddit API |
 
-## CRAW_Account
+# CRAW_Account
 
 here are some stuff which is stored and usable in CRAW_Account struct pointer
 
@@ -75,7 +81,13 @@ int main(){
 		return 2;
 	}
 	printf("My Name: %s", myInfo->name);
-	CRAW_Free(handle);
+	CRAW_free(handle);
 	return 0;
 }
 ```
+
+## Note
+
+This project is not well made as i am still trying to figure out to show the errors in proper way instead of just seg faulting but i will try to get it to work as soon as possible and might try to finish the project
+
+
