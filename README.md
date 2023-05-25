@@ -10,12 +10,14 @@ You can build it and see if it works or not.
 - [How to build](#How-to-build)
 - [Structure and typedef names](#Data-Structures)
 	- [CRAW_Account](#CRAW_Account)
+- [Functions](#Functions)
+- [CRAWcode list](#CRAWcode-list)
 - [Basic example](#Basic-example)
 
 
 ## where to get client id and secret key
 
-If you want to use this Wrapper, you need a reddit client id and secret key which you can get by going to https://reddit.com/prefs/apps and logging in with your credentials
+If you want to use this Wrapper, you need a reddit client id and secret key which you can get by going [here](https://reddit.com/prefs/apps) and logging in with your credentials
 
 ## How to build?
 The project has a dependency of libcurl, it can be installed in linux by
