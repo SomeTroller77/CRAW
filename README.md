@@ -111,7 +111,7 @@ int main(){
 		return 2;
 	}
 	printf("My Name: %s", myInfo->name);
-	CRAW_Account_free(myInfo->name);
+	CRAW_Account_free(myInfo);
 	CRAW_free(handle);
 	return 0;
 }
