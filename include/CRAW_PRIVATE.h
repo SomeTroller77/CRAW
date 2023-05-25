@@ -13,30 +13,24 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” 
 */
 
 /*
-DO NOT MESS WITH ANYTHING AS IT WILL BREAK THE LIBRARY OR CAUSE IT
-TO NOT WORK PROPERLY
+DO NOT MESS ANYTHING IN ANY FILE AS IT WILL BREAK THE LIBRARY OR CAUSE IT
+TO NOT WORK
 
 YOU HAVE BEEN WARNED
 */
-
-#ifndef CRAW_ACCOUNT_ME
-#define CRAW_ACCOUNT_ME
+#ifdef CRAW_PRIVATE_DO_NOT_MESS
 #include "CRAW.h"
-
-typedef struct CRAW_Reddit_Bot_Info CRAW;
-
-typedef enum CRAW_error_codes CRAWcode;
-
-typedef struct CRAW_Account_Info{
-	char *id;
-	char *name;
-	long created_utc;
-	int total_karma;
-} CRAW_Account;
-
-CRAWcode CRAW_Account_me(CRAW *handle, CRAW_Account *accHandle);
-CRAWcode CRAW_Account_getUserAbout(CRAW *handle, char *username, CRAW_Account *accHandle);
-CRAW_Account *CRAW_Account_Init();
-CRAWcode CRAW_Account_free(CRAW_Account *accHandle);
+typedef struct CRAW_Reddit_Bot_Info{
+        const char *client_id;
+        const char *secret_key;
+        const char *username;
+        const char *password;
+        const char *user_agent;
+        struct internalInfo{
+                const char *token_header;
+                int error_code;
+        } *internal;
+} CRAW;
+#else
+#error "Macro not defined"
 #endif
-

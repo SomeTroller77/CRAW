@@ -61,7 +61,34 @@ here are some stuff which is stored and usable in CRAW_Account struct pointer
 | long | created_utc | it stores the time of creation of account in EPOCH time |
 | int | total karma | it stores the total karma of the account |
 
+## Functions
 
+Here are some functions which can be called to do something
+
+| Return type | Function declaration | Description |
+| ----------- | -------------------- | ----------- |
+| `CRAW *`    | `CRAW_Init("Client id", "secret_key", "username", "password", "user_agent")` | Returns a pointer to the struct CRAW, returns NULL if the servers are down or any arguments are wrong |
+| `CRAW_Account *` | `CRAW_Account_Init()` | Returns a pointer to a CRAW_Account struct which can be used to store an account data, returns NULL if your out of memory |
+| `CRAWcode` | `CRAW_Account_me(CRAW *handle, CRAW_Account * accHandle)` | Returns a CRAW code and writes the data of logged in account to passed accHandle |
+| `CRAWcode` | `CRAW_Account_getUserAbout(CRAW *handle, char *username, CRAW_Account *accHandle)` | Returns a CRAWcode and writes the provided data from api to the passed accHandle |
+| `CRAWcode` | `CRAW_Account_free(CRAW_Account *accHandle)` | returns CRAWcode and frees the passed accHandle (Must be run on all the CRAW_Account variables initialised using `CRAW_Account_Init()` ) |
+| `CRAWcode` | `CRAW_free(CRAW *handle` | Returns a CRAWcode and frees the variable initialised using `CRAW_Init()` ) |
+
+## CRAWcode list
+Heres a list of CRAWcode which can be return by the functions with return type `CRAWcode`
+
+| CRAWcode | Description |
+| ------------------ | -------------------------------- |
+| CRAW_OK  | If you get this CRAWcode, then your all good to go |
+| CRAW_PARSE_ERROR | If you get this CRAWcode, then there a parsing error, recheck your parameters and try again |
+| CRAW_GRAB_ERROR | If you get this error, then check your internet as the wrapper couldnt grab the data from API |
+| CRAW_NOT_FOUND | If you get this error then check your parameter as the API couldnt find the data your looking for |
+| CRAW_UNAUTHORISED | If you get this error then check your username and password as the API was not able to authorize you ( there might be a chance of you being banned by api if you receive this error) |
+| CRAW_FORBIDDEN | If you get this error then check your username and password and then try again |
+| CRAW_TOO_MANY_REQUESTS | If you get this error, then take a chill pill and try it after 1-5 mins as you have been sending too many requests |
+| CRAW_UNKNOWN_CODE | If you get this error, then create a issue and send us your code and we will fix it as theres no CRAWcpde resgitered till now for this |
+
+If you still get any on the CRAWcode after following the instructions, then you are welcome to create a issue and we will help you! 
 ## Basic example
 
 Heres a basic example on how you could use it right now
@@ -82,6 +109,7 @@ int main(){
 		return 2;
 	}
 	printf("My Name: %s", myInfo->name);
+	CRAW_Account_free(myInfo->name);
 	CRAW_free(handle);
 	return 0;
 }
@@ -89,6 +117,6 @@ int main(){
 
 ## Note
 
-This project is not well made as i am still trying to figure out to show the errors in proper way instead of just seg faulting but i will try to get it to work as soon as possible and might try to finish the project
+This project is not well made as i am still developing it, it might take some time but i will try to make it a good project, issues are welcome
 
 
