@@ -107,6 +107,7 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
 	strcat((char*)handle->internal->token_header, access_tokenBuf->valuestring);
 	cJSON_Delete(monitor_json);
 	curl_easy_cleanup(curlhandle);
+	free(postString);
 	free(chunk.response); // Free the memory
 	return handle;
 }
