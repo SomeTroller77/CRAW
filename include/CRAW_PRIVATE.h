@@ -26,11 +26,15 @@ typedef struct CRAW_Reddit_Bot_Info{
         const char *username;
         const char *password;
         const char *user_agent;
-        struct internalInfo{
-                const char *token_header;
-                int error_code;
-        } *internal;
+        struct internalInfo *internal;
 } CRAW;
+struct internalInfo{
+	const char *token_header;
+        long error_code;
+	int ratelimit_remaining;
+        int ratelimit_reset;
+        int ratelimit_used;
+};
 #else
 #error "Macro not defined"
 #endif

@@ -31,8 +31,10 @@ YOU HAVE BEEN WARNED
 #include<stdlib.h>
 #ifdef _WIN32
 #include<Windows.h>
+#define SLEEP(time) Sleep(time)
 #else
 #include<unistd.h>
+#define SLEEP(time) sleep(time-1000)
 #endif
 
 struct memory{
@@ -59,13 +61,9 @@ static size_t cb(void *buf, size_t size, size_t count, void *userp){
 
 CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *username, const char *password, const char *user_agent){
 	struct memory chunk={0};
-	#ifdef _WIN32
-	Sleep(2000);
-	#else
-	sleep(2);
-	#endif
+	SLEEP(1000);
 	CRAW *handle=(CRAW*) malloc(sizeof(CRAW)+1);
-	handle->internal=(struct internalInfo *)malloc(sizeof(struct internalInfo)+1);
+	handle->internal=(struct internalInfo *)malloc(sizeof(struct internalInfo));
 	if(handle == NULL){
 		return NULL;
 	}
@@ -75,6 +73,7 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
 	handle->password=password;
 	handle->user_agent=user_agent;
 	handle->internal->token_header=NULL;
+	handle->internal->ratelimit_remaining=1;
 	char *baseString="grant_type=password&username=&password=";
 	char *postString=(char *) malloc(strlen(handle->username)+strlen(handle->password)+strlen(baseString)+1);
 	sprintf(postString, "grant_type=password&username=%s&password=%s", handle->username, handle->password);

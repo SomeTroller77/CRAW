@@ -25,17 +25,35 @@ YOU HAVE BEEN WARNED
 #include<curl/curl.h>
 #include "../include/cJSON.h"
 #include<stdlib.h>
+#include<string.h>
 #ifdef _WIN32
 #include<Windows.h>
+#define SLEEP(time) Sleep(time)
 #else
 #include<unistd.h>
+#define SLEEP(time) sleep(time-1000)
 #endif
 
 struct memory{
 	char *response;
 	size_t size;
 };
-
+struct linked_list;
+struct linked_list{
+	char *header;
+	struct linked_list *i;
+};
+static size_t hdf(char* b, size_t size, size_t nitems, void *userdata) {
+    struct linked_list *abc = (struct linked_list *)userdata;
+    while(abc->i != NULL){
+	abc=abc->i;
+    }
+    abc->header=strdup(b);
+    abc->i=malloc(sizeof(struct linked_list));
+    abc=abc->i;
+    abc->i=NULL;
+    return size*nitems;
+}
 static size_t cb(void *buf, size_t size, size_t count, void *userp){
         size_t realbytes=count*size;
         struct memory *mem=(struct memory *)userp;
@@ -53,26 +71,61 @@ static size_t cb(void *buf, size_t size, size_t count, void *userp){
 
 static char *grabData(CRAW *handle, const char *url){
         CURL *curlhandle=curl_easy_init();
+	handle->internal->error_code=0;
         CURLcode res;
         struct memory chunk={0};
-	#ifdef _WIN32
-	Sleep(1000);
-	#else
-	sleep(1);
-	#endif
 	long code;
 	struct curl_slist *list=NULL;
+	if(handle->internal->ratelimit_remaining == 0){
+                printf("%d %d %d\n", handle->internal->ratelimit_used, handle->internal->ratelimit_remaining, handle->internal->ratelimit_reset);
+                fprintf(stdout, "Ratelimit usage has depleted. Waiting for %d seconds", handle->internal->ratelimit_reset);
+                SLEEP(handle->internal->ratelimit_reset+1000);
+        }
         curl_easy_setopt(curlhandle, CURLOPT_URL, url);
         curl_easy_setopt(curlhandle, CURLOPT_WRITEFUNCTION, cb);
         curl_easy_setopt(curlhandle, CURLOPT_WRITEDATA, (void *)&chunk);
         curl_easy_setopt(curlhandle, CURLOPT_USERAGENT, handle->user_agent);
 	list=curl_slist_append(list, handle->internal->token_header);
 	curl_easy_setopt(curlhandle, CURLOPT_HTTPHEADER, list);
+	curl_easy_setopt(curlhandle, CURLOPT_HEADERFUNCTION, hdf);
+	struct linked_list test;
+	test.header=NULL;
+	test.i=NULL;
+	curl_easy_setopt(curlhandle, CURLOPT_HEADERDATA, &test);
         res=curl_easy_perform(curlhandle);
-	curl_easy_getinfo(curlhandle, CURLINFO_RESPONSE_CODE, &code);
-	handle->internal->error_code=code;
+	curl_easy_getinfo(curlhandle, CURLINFO_RESPONSE_CODE, &handle->internal->error_code);
 	curl_slist_free_all(list);
 	curl_easy_cleanup(curlhandle);
+	struct linked_list *current = &test;
+	current = test.i;
+	int tempint;
+	char temp[256];
+	while(current != NULL && current->header!=NULL){
+		if(sscanf(current->header, "%[^:]: %d", temp, &tempint) == -1){
+			return chunk.response;
+		}
+		if(strcmp(temp, "x-ratelimit-remaining") == 0){
+			handle->internal->ratelimit_remaining=tempint;
+		}
+		if(strcmp(temp, "x-ratelimit-reset") == 0){
+			handle->internal->ratelimit_reset=tempint;
+		}
+		if(strcmp(temp, "x-ratelimit-used") == 0){
+			handle->internal->ratelimit_used= tempint;
+		}
+		if(current->i == NULL){
+			return chunk.response;
+		}
+		else{
+			current=current->i;
+		}
+	}
+    	while (current != NULL) {
+        	struct linked_list *temp = current;
+        	current = current->i;
+        	free(temp->header);
+       		free(temp);
+    	}
 	return chunk.response;
 }
 
@@ -98,7 +151,7 @@ static CRAWcode check_http_code(long code){
 }
 
 CRAW_Account *CRAW_Account_Init() {
-	CRAW_Account *handle=malloc(sizeof(CRAW_Account)+1);
+	CRAW_Account *handle=malloc(sizeof(CRAW_Account));
 	if (handle == NULL) {
 	    return NULL;
 	}
@@ -121,7 +174,6 @@ CRAWcode CRAW_Account_me(CRAW *handle, CRAW_Account *accHandle) {
 	if(error != NULL){
 		return check_http_code(handle->internal->error_code);
 	}
-	handle->internal->error_code=0;
 	const cJSON *name=NULL;
 	const cJSON *total_karma=NULL;
 	const cJSON *id=NULL;
