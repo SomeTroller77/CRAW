@@ -63,8 +63,11 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
 	struct memory chunk={0};
 	SLEEP(1000);
 	CRAW *handle=(CRAW*) malloc(sizeof(CRAW)+1);
-	handle->internal=(struct internalInfo *)malloc(sizeof(struct internalInfo));
 	if(handle == NULL){
+		return NULL;
+	}
+	handle->internal=(struct internalInfo *)malloc(sizeof(struct internalInfo));
+	if(handle->internal == NULL){
 		return NULL;
 	}
 	handle->client_id=client_id;

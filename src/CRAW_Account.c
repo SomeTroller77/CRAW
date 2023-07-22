@@ -51,6 +51,7 @@ static size_t hdf(char* b, size_t size, size_t nitems, void *userdata) {
     abc->header=strdup(b);
     abc->i=malloc(sizeof(struct linked_list));
     abc=abc->i;
+    abc->header=NULL;
     abc->i=NULL;
     return size*nitems;
 }
@@ -77,7 +78,6 @@ static char *grabData(CRAW *handle, const char *url){
 	long code;
 	struct curl_slist *list=NULL;
 	if(handle->internal->ratelimit_remaining == 0){
-                printf("%d %d %d\n", handle->internal->ratelimit_used, handle->internal->ratelimit_remaining, handle->internal->ratelimit_reset);
                 fprintf(stdout, "Ratelimit usage has depleted. Waiting for %d seconds", handle->internal->ratelimit_reset);
                 SLEEP(handle->internal->ratelimit_reset+1000);
         }
