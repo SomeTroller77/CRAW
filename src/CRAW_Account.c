@@ -28,10 +28,10 @@ YOU HAVE BEEN WARNED
 #include<string.h>
 #ifdef _WIN32
 #include<Windows.h>
-#define SLEEP(time) Sleep(time)
+#define SLEEP(time) Sleep(time*1000)
 #else
 #include<unistd.h>
-#define SLEEP(time) sleep(time-1000)
+#define SLEEP(time) sleep(time)
 #endif
 
 struct memory{
@@ -75,11 +75,13 @@ static char *grabData(CRAW *handle, const char *url){
 	handle->internal->error_code=0;
         CURLcode res;
         struct memory chunk={0};
-	long code;
 	struct curl_slist *list=NULL;
 	if(handle->internal->ratelimit_remaining == 0){
-                fprintf(stdout, "Ratelimit usage has depleted. Waiting for %d seconds", handle->internal->ratelimit_reset);
-                SLEEP(handle->internal->ratelimit_reset+1000);
+		while(handle->internal->ratelimit_reset != 0){
+	                fprintf(stdout, "\nRatelimit usage has depleted. Waiting for %d seconds", handle->internal->ratelimit_reset);
+        	        SLEEP(1);
+			handle->internal->ratelimit_reset--;
+		}
         }
         curl_easy_setopt(curlhandle, CURLOPT_URL, url);
         curl_easy_setopt(curlhandle, CURLOPT_WRITEFUNCTION, cb);
@@ -93,6 +95,9 @@ static char *grabData(CRAW *handle, const char *url){
 	test.i=NULL;
 	curl_easy_setopt(curlhandle, CURLOPT_HEADERDATA, &test);
         res=curl_easy_perform(curlhandle);
+	if(res != CURLE_OK){
+		fprintf(stdout, "%s\n", curl_easy_strerror(res));
+	}
 	curl_easy_getinfo(curlhandle, CURLINFO_RESPONSE_CODE, &handle->internal->error_code);
 	curl_slist_free_all(list);
 	curl_easy_cleanup(curlhandle);
@@ -126,10 +131,13 @@ static char *grabData(CRAW *handle, const char *url){
         	free(temp->header);
        		free(temp);
     	}
+	fprintf(stderr, "CHECKPOINT REACHED @  %s:%i\n", __FILE__, __LINE__);
 	return chunk.response;
 }
 
 static CRAWcode check_http_code(long code){
+	printf("%ld\n", code);
+	fprintf(stderr, "CHECKPOINT REACHED @  %s:%i\n", __FILE__, __LINE__);
 	if(code >= 200 && code <=399){
                 return CRAW_OK;
         }
@@ -150,11 +158,16 @@ static CRAWcode check_http_code(long code){
         }
 }
 
-CRAW_Account *CRAW_Account_Init() {
+CRAW_Account *CRAW_Account_Init(void){
+	printf("%ld\n", sizeof(CRAW_Account));
 	CRAW_Account *handle=malloc(sizeof(CRAW_Account));
-	if (handle == NULL) {
+	if (handle == NULL){
 	    return NULL;
-	}
+	}/*
+	handle->name="\0";
+	handle->total_karma=-1;
+	handle->id="\0";
+	handle->created_utc=-1;*/
 	return handle;
 }
 
@@ -183,23 +196,29 @@ CRAWcode CRAW_Account_me(CRAW *handle, CRAW_Account *accHandle) {
 		return check_http_code(handle->internal->error_code);
 	}
 	accHandle->name=name->valuestring;
+	fprintf(stdout, "%p\n", &accHandle->name);
+	fflush(stdout);
 	total_karma=cJSON_GetObjectItemCaseSensitive(monitor_json, "total_karma");
 	if(total_karma == NULL){
 		return CRAW_TOKEN_ERROR;
 	}
 	accHandle->total_karma=total_karma->valuedouble;
+	fprintf(stdout, "%d\n", accHandle->total_karma);
 	created_utc=cJSON_GetObjectItemCaseSensitive(monitor_json, "created_utc");
 	if(created_utc == NULL){
 		return CRAW_TOKEN_ERROR;
 	}
 	accHandle->created_utc=created_utc->valuedouble;
+	fprintf(stdout,"%ld\n", accHandle->created_utc);
 	id=cJSON_GetObjectItemCaseSensitive(monitor_json, "id");
 	if(id == NULL){
 		return CRAW_TOKEN_ERROR;
 	}
 	accHandle->id=id->valuestring;
-	free(json);
+	fprintf(stdout, "%s\n", accHandle->id);
 	cJSON_Delete(monitor_json);
+	free(json);
+	printf("%ld\n", handle->internal->error_code);
 	return check_http_code(handle->internal->error_code);
 }
 
@@ -217,6 +236,8 @@ CRAWcode CRAW_Account_getUserAbout(CRAW *handle, char *username, CRAW_Account *a
 	if(root == NULL){
 		return CRAW_PARSE_ERROR;
 	}
+	fprintf(stderr, "CHECKPOINT REACHED @  %s:%i\n", __FILE__, __LINE__);
+	printf("%s\n", json);
 	const cJSON *data=NULL;
 	data=cJSON_GetObjectItemCaseSensitive(root, "data");
 	const cJSON *name=NULL;
@@ -228,22 +249,28 @@ CRAWcode CRAW_Account_getUserAbout(CRAW *handle, char *username, CRAW_Account *a
 		return check_http_code(handle->internal->error_code);
 	}
 	accHandle->name=name->valuestring;
+	fprintf(stdout, "%p\n", &accHandle->name);
 	id=cJSON_GetObjectItemCaseSensitive(data, "id");
 	if(id == NULL){
 		return CRAW_PARSE_ERROR;
 	}
+	fprintf(stdout, "%s\n", accHandle->id);
 	accHandle->id=id->valuestring;
 	total_karma=cJSON_GetObjectItemCaseSensitive(data, "total_karma");
 	if(total_karma == NULL){
 		return CRAW_PARSE_ERROR;
 	}
+	fprintf(stdout, "%d\n", accHandle->total_karma);
 	accHandle->total_karma=(int)total_karma->valuedouble;
 	created_utc=cJSON_GetObjectItemCaseSensitive(data, "created_utc");
 	if(created_utc == NULL){
 		return CRAW_PARSE_ERROR;
 	}
 	accHandle->created_utc=(long)created_utc->valuedouble;
+	fprintf(stdout, "%ld\n", accHandle->created_utc);
 	cJSON_Delete(root);
+	free(json);
+	fprintf(stderr, "CHECKPOINT REACHED @  %s:%i\n", __FILE__, __LINE__);
 	return CRAW_OK;
 }
 

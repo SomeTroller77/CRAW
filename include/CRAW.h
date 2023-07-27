@@ -26,7 +26,7 @@ YOU HAVE BEEN WARNED
 #include "CRAW_Account.h"
 
 
-typedef enum CRAW_error_codes CRAWcode;
+
 
 typedef struct CRAW_Reddit_Bot_Info CRAW;
 

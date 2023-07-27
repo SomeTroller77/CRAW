@@ -20,21 +20,23 @@ YOU HAVE BEEN WARNED
 */
 #ifdef CRAW_PRIVATE_DO_NOT_MESS
 #include "CRAW.h"
+#include<curl/curl.h>
 typedef struct CRAW_Reddit_Bot_Info{
         const char *client_id;
         const char *secret_key;
         const char *username;
         const char *password;
         const char *user_agent;
-        struct internalInfo *internal;
+        struct internalInfo{
+        	const char *token_header;
+        	long error_code;
+        	int ratelimit_remaining;
+        	int ratelimit_reset;
+        	int ratelimit_used;
+		CURLcode last_request_status;
+	} *internal;
 } CRAW;
-struct internalInfo{
-	const char *token_header;
-        long error_code;
-	int ratelimit_remaining;
-        int ratelimit_reset;
-        int ratelimit_used;
-};
+
 #else
 #error "Macro not defined"
 #endif

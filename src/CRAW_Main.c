@@ -66,7 +66,7 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
 	if(handle == NULL){
 		return NULL;
 	}
-	handle->internal=(struct internalInfo *)malloc(sizeof(struct internalInfo));
+	handle->internal=(struct internalInfo *)malloc(sizeof(handle->internal));
 	if(handle->internal == NULL){
 		return NULL;
 	}
