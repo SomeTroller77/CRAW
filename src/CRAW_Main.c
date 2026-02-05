@@ -29,47 +29,24 @@ YOU HAVE BEEN WARNED
 #define CRAW_PRIVATE_DO_NOT_MESS
 #include "../include/CRAW_PRIVATE.h"
 #include<stdlib.h>
-#ifdef _WIN32
-#include<Windows.h>
-#define SLEEP(time) Sleep(time)
-#else
-#include<unistd.h>
-#define SLEEP(time) sleep(time-1000)
-#endif
-
-struct memory{
-	char *response;
-	size_t size;
-};
-static size_t cb(void *buf, size_t size, size_t count, void *userp){
-	size_t realbytes=count*size;
-	struct memory *mem=(struct memory *)userp;
-	char *ptr=realloc(mem->response, mem->size+realbytes+1);
-	if(ptr==NULL){
-		return 0;
-	}
-	mem->response=ptr;
-	memcpy(&(mem->response[mem->size]), buf, realbytes);
-	mem->size+=realbytes;
-	mem->response[mem->size]=0;
-	return realbytes;
-
-}
 
 
-
-
+// The initialization function which is takes the parameters given and loads in the access token and other things from the endpoint 
 CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *username, const char *password, const char *user_agent){
+	// initializing the memory struct for libcurl
 	struct memory chunk={0};
-	SLEEP(1000);
+	// allocating memory for the struct CRAW which is the base for all the requests to be sent and utilized by other functions
 	CRAW *handle=(CRAW*) malloc(sizeof(CRAW)+1);
 	if(handle == NULL){
-		return NULL;
+		return NULL; //memory check
 	}
+	// allocating memory for the member pointer which holds all the important data like access_token
+	// this line was the culprit for causing segmentation fault and core dumping and was fixed after 3 years (commit id 6bd780576da45303ed25b7ed906f3c6b59e7d352)
 	handle->internal=(struct internalInfo *)calloc(1, (sizeof(*handle->internal)));
 	if(handle->internal == NULL){
 		return NULL;
 	}
+	// loading in the parameters in handle for furthur use
 	handle->client_id=client_id;
 	handle->secret_key=secret_key;
 	handle->username=username;
@@ -77,6 +54,7 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
 	handle->user_agent=user_agent;
 	handle->internal->token_header=NULL;
 	handle->internal->ratelimit_remaining=1;
+	// preparing the base string and the post string to be used as data for reddit oauth endpoint
 	char *baseString="grant_type=password&username=&password=";
 	char *postString=(char *) malloc(strlen(handle->username)+strlen(handle->password)+strlen(baseString)+1);
 	sprintf(postString, "grant_type=password&username=%s&password=%s", handle->username, handle->password);
@@ -86,6 +64,7 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
 	}
 	CURLcode res;
 	chunk.response=NULL;
+	// setting curl parameters
 	curl_easy_setopt(curlhandle, CURLOPT_URL, "https://www.reddit.com/api/v1/access_token");
 	curl_easy_setopt(curlhandle, CURLOPT_USERNAME, handle->client_id);
 	curl_easy_setopt(curlhandle, CURLOPT_PASSWORD, handle->secret_key);
@@ -93,11 +72,14 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
 	curl_easy_setopt(curlhandle, CURLOPT_WRITEDATA, (void *)&chunk);
 	curl_easy_setopt(curlhandle, CURLOPT_USERAGENT, handle->user_agent);
 	curl_easy_setopt(curlhandle, CURLOPT_POSTFIELDS, postString);
+	// sending the request
 	res=curl_easy_perform(curlhandle);
 	if(chunk.response == NULL){
 		return NULL;
 	}
+	// storing the HTTP response code
 	curl_easy_getinfo(curlhandle, CURLINFO_RESPONSE_CODE, &handle->internal->error_code);
+	// initializing cJSON
 	const cJSON *access_tokenBuf=NULL;
 	cJSON *monitor_json=cJSON_Parse(chunk.response);
 	access_tokenBuf=cJSON_GetObjectItemCaseSensitive(monitor_json, "access_token");
@@ -105,8 +87,10 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
 		return NULL;
 	}
 	handle->internal->token_header=(char*) malloc(strlen("Authorization: bearer ")+strlen(access_tokenBuf->valuestring)+1);
+	// copying and concatenating token in the auth header format for furthur use
 	strcpy((char*)handle->internal->token_header, "Authorization: bearer ");
 	strcat((char*)handle->internal->token_header, access_tokenBuf->valuestring);
+	// cleaning memory
 	cJSON_Delete(monitor_json);
 	curl_easy_cleanup(curlhandle);
 	free(postString);
@@ -114,6 +98,8 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
 	return handle;
 }
 
+// just a random ass free function i thought would be useful
+// To be used when CRAW is not needed, or at the end of the program
 CRAWcode CRAW_free(CRAW *handle){
 	free(handle->internal->token_header);
 	free(handle->internal);
@@ -122,3 +108,4 @@ CRAWcode CRAW_free(CRAW *handle){
 }
 
 
+// fun fact:- the comments are being added after 3 years of starting the project, well you know what they say, its never too late
