@@ -19,6 +19,7 @@ TO NOT WORK
 YOU HAVE BEEN WARNED
 */
 #ifdef CRAW_PRIVATE_DO_NOT_MESS
+#include<stdbool.h>
 #include "CRAW.h"
 #include<curl/curl.h>
 typedef struct CRAW_Reddit_Bot_Info{

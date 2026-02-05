@@ -66,7 +66,7 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
 	if(handle == NULL){
 		return NULL;
 	}
-	handle->internal=(struct internalInfo *)malloc(sizeof(handle->internal));
+	handle->internal=(struct internalInfo *)calloc(1, (sizeof(*handle->internal)));
 	if(handle->internal == NULL){
 		return NULL;
 	}
@@ -115,9 +115,9 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
 }
 
 CRAWcode CRAW_free(CRAW *handle){
-	free((void*)handle->internal->token_header);
-	free((void*)handle->internal);
-	free((void*)handle);
+	free(handle->internal->token_header);
+	free(handle->internal);
+	free(handle);
 	return CRAW_OK;
 }
 
