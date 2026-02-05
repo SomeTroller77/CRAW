@@ -19,8 +19,7 @@ TO NOT WORK PROPERLY
 YOU HAVE BEEN WARNED
 */
 
-#ifndef CRAW_ACCOUNT_ME
-#define CRAW_ACCOUNT_ME
+
 #include "CRAW.h"
 
 // implementing CRAW_Reddit_Subreddit for subreddit information
