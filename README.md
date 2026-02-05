@@ -10,6 +10,7 @@ You can build it and see if it works or not.
 - [How to build](#How-to-build)
 - [Structure and typedef names](#Data-Structures)
 	- [CRAW_Account](#CRAW_Account)
+	- [CRAW_Subreddit](#craw_subreddit)
 - [Functions](#Functions)
 - [CRAWcode list](#CRAWcode-list)
 - [Basic example](#Basic-example)
