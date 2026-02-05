@@ -89,16 +89,20 @@ here are some stuff which is stored and usable in CRAW_Account struct pointer
 
 ## Functions
 
-Here are some functions which can be called to do something
+Functions implemented:-
 
 | Return type | Function declaration | Description |
 | ----------- | -------------------- | ----------- |
 | `CRAW *`    | `CRAW_Init("Client id", "secret_key", "username", "password", "user_agent")` | Returns a pointer to the struct CRAW, returns NULL if the servers are down or any arguments are wrong |
+| `CRAWcode` | `CRAW_free(CRAW *handle` | Returns a CRAWcode and frees the variable initialised using `CRAW_Init()` |
+
+# CRAW_Account 
+| Return type | Function declaration | Description |
 | `CRAW_Account *` | `CRAW_Account_Init()` | Returns a pointer to a CRAW_Account struct which can be used to store an account data, returns NULL if your out of memory |
 | `CRAWcode` | `CRAW_Account_me(CRAW *handle, CRAW_Account * accHandle)` | Returns a CRAW code and writes the data of logged in account to passed accHandle |
 | `CRAWcode` | `CRAW_Account_getUserAbout(CRAW *handle, char *username, CRAW_Account *accHandle)` | Returns a CRAWcode and writes the provided data from api to the passed accHandle |
 | `CRAWcode` | `CRAW_Account_free(CRAW_Account *accHandle)` | returns CRAWcode and frees the passed accHandle (Must be run on all the CRAW_Account variables initialised using `CRAW_Account_Init()` ) |
-| `CRAWcode` | `CRAW_free(CRAW *handle` | Returns a CRAWcode and frees the variable initialised using `CRAW_Init()` ) |
+
 
 ## CRAWcode list
 Heres a list of CRAWcode which can be return by the functions with return type `CRAWcode`
