@@ -55,7 +55,7 @@ CRAW uses struct to store the data. heres the table of the structs in C
 | CRAW_Subreddit | It stores the data of subreddit which is sent by the reddit API |
 | CRAW_Messages | It stores the data of a message/comment which is sent by the reddit API |
 
-#### CRAW_Account
+### CRAW_Account
 
 here are some stuff which is stored and usable in CRAW_Account struct pointer
 
@@ -66,7 +66,7 @@ here are some stuff which is stored and usable in CRAW_Account struct pointer
 | long | created_utc | it stores the time of creation of account in EPOCH time |
 | int | total karma | it stores the total karma of the account |
 
-#### CRAW_Subreddit
+### CRAW_Subreddit
 | Data Type | Field | Description |
 | --------- | ----- | ----------- |
 | int | accounts_active | number of users active in the last 15 minutes |
@@ -96,8 +96,9 @@ Functions implemented:-
 | `CRAW *`    | `CRAW_Init("Client id", "secret_key", "username", "password", "user_agent")` | Returns a pointer to the struct CRAW, returns NULL if the servers are down or any arguments are wrong |
 | `CRAWcode` | `CRAW_free(CRAW *handle` | Returns a CRAWcode and frees the variable initialised using `CRAW_Init()` |
 
-# CRAW_Account 
+### CRAW_Account 
 | Return type | Function declaration | Description |
+| ----------- | -------------------- | ----------- |
 | `CRAW_Account *` | `CRAW_Account_Init()` | Returns a pointer to a CRAW_Account struct which can be used to store an account data, returns NULL if your out of memory |
 | `CRAWcode` | `CRAW_Account_me(CRAW *handle, CRAW_Account * accHandle)` | Returns a CRAW code and writes the data of logged in account to passed accHandle |
 | `CRAWcode` | `CRAW_Account_getUserAbout(CRAW *handle, char *username, CRAW_Account *accHandle)` | Returns a CRAWcode and writes the provided data from api to the passed accHandle |
