@@ -52,7 +52,7 @@ CRAWcode CRAW_Account_me(CRAW *handle, CRAW_Account *accHandle) {
 	char *json=grabData(handle, "https://oauth.reddit.com/api/v1/me");
 	if (json == NULL) {
 	    return check_http_code(handle->internal->error_code);
-	    //return CRAW_GRAB_ERROR;  // TO DO: add this error code
+	    return CRAW_GRAB_ERROR;  
 	}
 	cJSON *monitor_json=cJSON_Parse(json); // parsing the json through cJSON
 	if(monitor_json == NULL){

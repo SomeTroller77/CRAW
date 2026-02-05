@@ -33,22 +33,27 @@ YOU HAVE BEEN WARNED
 #define SLEEP(time) sleep(time-1000)
 #endif
 // The base struct, the daddy of all the functions, ohhhh yeahhhh
-typedef struct CRAW_Reddit_Bot_Info{
-        const char *client_id;
-        const char *secret_key;
-        const char *username;
-        const char *password;
-        const char *user_agent;
+typedef struct CRAW_Reddit_Bot{
+	const char *client_id;
+	const char *secret_key;
+	const char *username;
+	const char *password;
+	const char *user_agent;
 	// the struct which stores info about the last request aswell as tracks the info of ratelimiting
-        struct internalInfo{
-        	const char *token_header;
-        	long error_code;
-        	int ratelimit_remaining;
-        	int ratelimit_reset;
-        	int ratelimit_used;
+	struct internalInfo{
+		const char *token_header;
+		long error_code;
+		int ratelimit_remaining;
+		int ratelimit_reset;
+		int ratelimit_used;
 		CURLcode last_request_status;
 	} *internal;
 } CRAW;
+
+
+
+
+
 
 // the buffer struct which is required by libcurl to store the databytes temporarily
 struct memory{
