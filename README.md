@@ -8,10 +8,12 @@ You can build it and see if it works or not.
 ## Table of contents
 - [Where to get client id and secret key](#where-to-get-client-id-and-secret-key)
 - [How to build](#How-to-build)
-- [Structure and typedef names](#Data-Structures)
+- [Data structures](#Data-Structures)
 	- [CRAW_Account](#CRAW_Account)
 	- [CRAW_Subreddit](#craw_subreddit)
 - [Functions](#Functions)
+	- [Main functions](#craw_main)
+	- [Account](#craw_account-1)
 - [CRAWcode list](#CRAWcode-list)
 - [Basic example](#Basic-example)
 
@@ -26,7 +28,7 @@ The project has a dependency of libcurl, it can be installed in linux by
 Ubuntu:
 ```
 # sudo apt-get install curl
-# sudo apt-get install libcurl-dev
+# apt-get install libcurl4-openssl-dev
 ```
 Clone this repo using
 ```
@@ -91,6 +93,7 @@ here are some stuff which is stored and usable in CRAW_Account struct pointer
 
 Functions implemented:-
 
+### CRAW_Main
 | Return type | Function declaration | Description |
 | ----------- | -------------------- | ----------- |
 | `CRAW *`    | `CRAW_Init("Client id", "secret_key", "username", "password", "user_agent")` | Returns a pointer to the struct CRAW, returns NULL if the servers are down or any arguments are wrong |
