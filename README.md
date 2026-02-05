@@ -51,17 +51,40 @@ CRAW uses struct to store the data. heres the table of the structs in C
 | --- | --- |
 | CRAW | It is used to store the developers data that developers provide which will be used to send requests |
 | CRAW_Account | It stores the account data which is sent by the reddit API |
+| CRAW_Subreddit | It stores the data of subreddit which is sent by the reddit API |
+| CRAW_Messages | It stores the data of a message/comment which is sent by the reddit API |
 
 #### CRAW_Account
 
 here are some stuff which is stored and usable in CRAW_Account struct pointer
 
-| Data type | Name | Description |
+| Data Type | Field | Description |
 | --------- | ---- | ----------- |
 | char * | id | its stores the reddit id of the account |
 | char * | name | it stores the username of the account |
 | long | created_utc | it stores the time of creation of account in EPOCH time |
 | int | total karma | it stores the total karma of the account |
+
+#### CRAW_Subreddit
+| Data Type | Field | Description |
+| --------- | ----- | ----------- |
+| int | accounts_active | number of users active in the last 15 minutes |
+| char * | description | sidebar text |
+| char * | display_name | human name of the subreddit |
+| char * | header_img | full URL to the header image |
+| char * | header_title | description of header |
+| bool | over18 | whether the subreddit is marked as NSFW |
+| char * | public_description | Description shown in subreddit search results |
+| bool | public_traffic | whether the subreddit's traffic page is publically accesssible |
+| long | subscribers | the number of redditors subscribed to this subreddit |
+| CRAW_Subreddit_type | subreddit_type | the type of the subreddit (public, private, restricted) |
+| char * | title | title of the main page |
+| char * | url | the relative URL of the subreddit |
+| bool | is_user_banned | whether the logged-in user is banned from the subreddit
+| bool | is_user_contributor | whether the logged-in user is an approved submitter of the reddit |
+| bool | is_user_moderator | whether the logged-in user is a moderator of the subreddit |
+| bool | is_user_subscriber | whether the logged-in user is subscribed to the subreddit |
+
 
 ## Functions
 
