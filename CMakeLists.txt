@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.13.4)
-
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
 project(CRAW VERSION 0.1 DESCRIPTION "C Reddit API Wrapper" LANGUAGES C)
 add_compile_options(-Wall -Wextra -Wpedantic -g)
-add_library(${PROJECT_NAME} SHARED src/cJSON.c src/CRAW_Main.c src/CRAW_Account.c include/CRAW.h include/CRAW_Account.h include/cJSON.h include/CRAW_PRIVATE.h)
+file(GLOB SRC_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c")
+add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE include)
 
@@ -17,8 +19,11 @@ else()
     message(FATAL_ERROR "Could not find CURL")
 endif()
 
-set_target_properties(CRAW PROPERTIES PUBLIC_HEADER "include/CRAW.h;include/CRAW_Account.h")
+install(TARGETS CRAW
+    LIBRARY DESTINATION lib
+)
 
-install(TARGETS CRAW LIBRARY DESTINATION lib PUBLIC_HEADER DESTINATION include/CRAW)
-
-
+install(DIRECTORY include/
+    DESTINATION include/CRAW
+    FILES_MATCHING PATTERN "*.h"
+)

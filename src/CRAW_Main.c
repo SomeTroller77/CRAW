@@ -25,13 +25,14 @@ YOU HAVE BEEN WARNED
 #include<stdlib.h>
 #include<curl/curl.h>
 #include "../include/cJSON.h"
-#include "../include/CRAW.h"
+#include "../include/CRAW_Main.h"
 #define CRAW_PRIVATE_DO_NOT_MESS
 #include "../include/CRAW_PRIVATE.h"
 #include<stdlib.h>
 
 
 // The initialization function which is takes the parameters given and loads in the access token and other things from the endpoint 
+
 CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *username, const char *password, const char *user_agent){
 	// initializing the memory struct for libcurl
 	struct memory chunk={0};

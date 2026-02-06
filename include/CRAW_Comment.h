@@ -19,33 +19,18 @@ TO NOT WORK PROPERLY
 YOU HAVE BEEN WARNED
 */
 
-#ifndef CRAW_SUBREDDIT_H
-#define CRAW_SUBREDDIT_H
+#ifndef CRAW_COMMENT_H
+#define CRAW_COMMENT_H
 #include "CRAW_Main.h"
 #include <stdbool.h>
-// implementing CRAW_Reddit_Subreddit for subreddit information
-// TO DO: bring it into use by implementing subreddit endpoints
-typedef struct CRAW_Reddit_Subreddit{
-	int accounts_active;
-	int comment_score_hide_mins;
-	char *description;
-	char *display_name;
-	char *header_img;
-	char *header_title;
-	bool over18;
-	char *public_description;
-	bool public_traffic;
-	long subscribers;
-	char *submission_type;
-	char *submit_link_label;
-	char *submit_text_label;
-	CRAW_Subreddit_type subreddit_type;
-	char *title;
-	char *url;
-	bool is_user_banned;
-	bool is_user_contributer;
-	bool is_user_moderator;
-	bool is_user_subscriber;
-} CRAW_Subreddit;
-CRAWcode CRAW_Subreddit_GetInfo(CRAW *handle, char *subreddit_name);
+
+typedef struct {
+    char *approved_by;
+    char *author;
+    char *banned_by;
+    char *body;
+    bool likes;
+    char *link_id;
+    char *subreddit;
+} CRAW_Comment;
 #endif

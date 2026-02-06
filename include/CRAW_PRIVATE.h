@@ -18,7 +18,8 @@ TO NOT WORK
 
 YOU HAVE BEEN WARNED
 */
-
+#ifndef CRAW_PRIVATE_H
+#define CRAW_PRIVATE_H
 // safety check so the functions can only be used by me because C doesnt have the functionality of private and public function, sounds surprising right????
 #ifdef CRAW_PRIVATE_DO_NOT_MESS
 #include<stdbool.h>
@@ -32,153 +33,26 @@ YOU HAVE BEEN WARNED
 #include<unistd.h>
 #define SLEEP(time) sleep(time-1000)
 #endif
-// The base struct, the daddy of all the functions, ohhhh yeahhhh
-typedef struct CRAW_Reddit_Bot{
-	const char *client_id;
-	const char *secret_key;
-	const char *username;
-	const char *password;
-	const char *user_agent;
-	// the struct which stores info about the last request aswell as tracks the info of ratelimiting
-	struct internalInfo{
-		const char *token_header;
-		long error_code;
-		int ratelimit_remaining;
-		int ratelimit_reset;
-		int ratelimit_used;
-		CURLcode last_request_status;
-	} *internal;
-} CRAW;
-
-
-
 
 
 
 // the buffer struct which is required by libcurl to store the databytes temporarily
 struct memory{
-        char *response;
-        size_t size;
+	char *response;
+	size_t size;
 };
 
 // linked list was implemented in the library to store and process HTTP headers efficiently
 struct linked_list{
-        char *header;
-        struct linked_list *i;
+	char *header;
+	struct linked_list *i;
 };
 
-// i dont even know what the fuck is this shit
-static size_t hdf(char* b, size_t size, size_t nitems, void *userdata) {
-    struct linked_list *abc = (struct linked_list *)userdata;
-    while(abc->i != NULL){
-        abc=abc->i;
-    }
-    abc->header=strdup(b);
-    abc->i=malloc(sizeof(struct linked_list));
-    abc=abc->i;
-    abc->header=NULL;
-    abc->i=NULL;
-    return size*nitems;
-}
-
-// the fallback function required by libcurl to store the data and to process it to be stored in a buffer
-static size_t cb(void *buf, size_t size, size_t count, void *userp){
-        size_t realbytes=count*size;
-        struct memory *mem=(struct memory *)userp;
-        char *ptr=realloc(mem->response, mem->size+realbytes+1);
-        if(ptr==NULL){
-                return 0;
-        }
-        mem->response=ptr;
-        memcpy(&(mem->response[mem->size]), buf, realbytes);
-        mem->size+=realbytes;
-        mem->response[mem->size]=0;
-        return realbytes;
-
-}
-static char *grabData(CRAW *handle, const char *url){
-        CURL *curlhandle=curl_easy_init();
-	handle->internal->error_code=0;
-        CURLcode res;
-        struct memory chunk={0};
-	struct curl_slist *list=NULL;
-	if(handle->internal->ratelimit_remaining == 0){
-		while(handle->internal->ratelimit_reset != 0){
-	                fprintf(stdout, "\nRatelimit usage has depleted. Waiting for %d seconds", handle->internal->ratelimit_reset);
-        	        SLEEP(1);
-			handle->internal->ratelimit_reset--;
-		}
-        }
-        curl_easy_setopt(curlhandle, CURLOPT_URL, url);
-        curl_easy_setopt(curlhandle, CURLOPT_WRITEFUNCTION, cb);
-        curl_easy_setopt(curlhandle, CURLOPT_WRITEDATA, (void *)&chunk);
-        curl_easy_setopt(curlhandle, CURLOPT_USERAGENT, handle->user_agent);
-	list=curl_slist_append(list, handle->internal->token_header);
-	curl_easy_setopt(curlhandle, CURLOPT_HTTPHEADER, list);
-	curl_easy_setopt(curlhandle, CURLOPT_HEADERFUNCTION, hdf);
-	struct linked_list test;
-	test.header=NULL;
-	test.i=NULL;
-	curl_easy_setopt(curlhandle, CURLOPT_HEADERDATA, &test);
-        res=curl_easy_perform(curlhandle);
-	if(res != CURLE_OK){
-		fprintf(stdout, "%s\n", curl_easy_strerror(res));
-	}
-	curl_easy_getinfo(curlhandle, CURLINFO_RESPONSE_CODE, &handle->internal->error_code);
-	curl_slist_free_all(list);
-	curl_easy_cleanup(curlhandle);
-	struct linked_list *current = &test;
-	current = test.i;
-	int tempint;
-	char temp[256];
-	while(current != NULL && current->header!=NULL){
-		if(sscanf(current->header, "%[^:]: %d", temp, &tempint) == -1){
-			return chunk.response;
-		}
-		if(strcmp(temp, "x-ratelimit-remaining") == 0){
-			handle->internal->ratelimit_remaining=tempint;
-		}
-		if(strcmp(temp, "x-ratelimit-reset") == 0){
-			handle->internal->ratelimit_reset=tempint;
-		}
-		if(strcmp(temp, "x-ratelimit-used") == 0){
-			handle->internal->ratelimit_used= tempint;
-		}
-		if(current->i == NULL){
-			return chunk.response;
-		}
-		else{
-			current=current->i;
-		}
-	}
-    	while (current != NULL) {
-        	struct linked_list *temp = current;
-        	current = current->i;
-        	free(temp->header);
-       		free(temp);
-    	}
-	return chunk.response;
-}
-static CRAWcode check_http_code(long code){
-	if(code >= 200 && code <=399){
-                return CRAW_OK;
-        }
-	else if(code == 400){
-		return CRAW_BAD_REQUEST;
-	}
-	else if(code == 401){
-		return CRAW_UNAUTHORISED;
-	}
-	else if(code == 403){
-		return CRAW_FORBIDDEN;
-	}
-	else if(code == 429){
-		return CRAW_TOO_MANY_REQUESTS;
-	}
-	else{
-                return CRAW_UNKNOWN_CODE;
-        }
-}
+size_t cb(void *buf, size_t size, size_t count, void *userp);
+size_t hdf(char *b, size_t size, size_t nitems, void *userdata);
+char *getData(CRAW *handle, const char *url);
+CRAWcode check_http_code(long code);
 #else
 #error "Macro not defined"
+#endif
 #endif

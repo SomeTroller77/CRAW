@@ -1,5 +1,5 @@
 /*
-Copyright 2022 SomeTroller77 / Saksham Vitwekar and the contributers of the CRAW project
+Copyright 2023 SomeTroller77 / Saksham Vitwekar and the contributers of the CRAW project
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -10,42 +10,33 @@ Redistribution and use in source and binary forms, with or without modification,
 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 */
 
 /*
-DO NOT MESS WITH ANYTHING AS IT WILL BREAK THE LIBRARY OR CAUSE IT
-TO NOT WORK PROPERLY
+DO NOT MESS ANYTHING IN ANY FILE AS IT WILL BREAK THE LIBRARY OR CAUSE IT
+TO NOT WORK
 
 YOU HAVE BEEN WARNED
 */
 
-#ifndef CRAW_SUBREDDIT_H
-#define CRAW_SUBREDDIT_H
-#include "CRAW_Main.h"
-#include <stdbool.h>
-// implementing CRAW_Reddit_Subreddit for subreddit information
-// TO DO: bring it into use by implementing subreddit endpoints
-typedef struct CRAW_Reddit_Subreddit{
-	int accounts_active;
-	int comment_score_hide_mins;
-	char *description;
-	char *display_name;
-	char *header_img;
-	char *header_title;
-	bool over18;
-	char *public_description;
-	bool public_traffic;
-	long subscribers;
-	char *submission_type;
-	char *submit_link_label;
-	char *submit_text_label;
-	CRAW_Subreddit_type subreddit_type;
-	char *title;
-	char *url;
-	bool is_user_banned;
-	bool is_user_contributer;
-	bool is_user_moderator;
-	bool is_user_subscriber;
-} CRAW_Subreddit;
-CRAWcode CRAW_Subreddit_GetInfo(CRAW *handle, char *subreddit_name);
-#endif
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<curl/curl.h>
+#include "../include/cJSON.h"
+
+#define CRAW_PRIVATE_DO_NOT_MESS
+#include "../include/CRAW_PRIVATE.h"
+#include<stdlib.h>
+
+CRAWcode CRAW_Subreddit_GetInfo(CRAW *handle, char *subreddit_name){
+    size_t len = strlen("/r//about/") + strlen(subreddit_name) + 1;
+    char *url = malloc(len);
+    snprintf(url, len, "/r/%s/about/", subreddit_name);
+    char *json = getData(handle, url);
+    printf("%s", json);
+    free(json);
+    free(url);
+    return CRAW_OK;
+}

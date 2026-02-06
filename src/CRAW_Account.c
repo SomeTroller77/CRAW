@@ -20,18 +20,23 @@ YOU HAVE BEEN WARNED
 */
 #include<stdio.h>
 #include<string.h>
+#include "CRAW_Main.h"
 #define CRAW_PRIVATE_DO_NOT_MESS
 #include "../include/CRAW_PRIVATE.h"
+#include "CRAW_Main.h"
 #include<curl/curl.h>
 #include "../include/cJSON.h"
 #include<stdlib.h>
 #include<string.h>
+#include "../include/CRAW_Account.h"
 #ifdef _WIN32
 #include<Windows.h>
 #define SLEEP(time) Sleep(time*1000)
 #else
 #include<unistd.h>
+#ifndef SLEEP
 #define SLEEP(time) sleep(time)
+#endif
 #endif
 
 // initializing the CRAW_Account struct
@@ -49,7 +54,7 @@ CRAW_Account *CRAW_Account_Init(void){
 
 // to grab data about the logged in account 
 CRAWcode CRAW_Account_me(CRAW *handle, CRAW_Account *accHandle) {
-	char *json=grabData(handle, "https://oauth.reddit.com/api/v1/me");
+	char *json=getData(handle, "/api/v1/me");
 	if (json == NULL) {
 	    return check_http_code(handle->internal->error_code);
 	    return CRAW_GRAB_ERROR;  
@@ -98,10 +103,10 @@ CRAWcode CRAW_Account_me(CRAW *handle, CRAW_Account *accHandle) {
 // grabbing someone elses account info (disclaimer: stalking is bad kids)
 CRAWcode CRAW_Account_getUserAbout(CRAW *handle, char *username, CRAW_Account *accHandle){
 	// preparing urlString to concatenate the username in the endpoint
-	char *urlString=(char*) malloc(strlen("https://oauth.reddit.com/user/%s/about")+ strlen(username) + 1);
-	sprintf(urlString, "https://oauth.reddit.com/user/%s/about", username); // concatenation
+	char *urlString=(char*) malloc(strlen("/user/%s/about")+ strlen(username) + 1);
+	sprintf(urlString, "/user/%s/about", username); // concatenation
 	//sending the request
-	char *json=grabData(handle, urlString);
+	char *json=getData(handle, urlString);
 	//freeing the malloc'ed urlString
 	free(urlString);
 	if(json == NULL){

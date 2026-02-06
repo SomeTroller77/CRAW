@@ -19,13 +19,13 @@ TO NOT WORK PROPERLY
 YOU HAVE BEEN WARNED
 */
 
-#ifndef CRAW_ACCOUNT_ME
-#define CRAW_ACCOUNT_ME
-#include "CRAW.h"
+#ifndef CRAW_MESSAGE_H
+#define CRAW_MESSAGE_H
+#include "CRAW_Main.h"
 
 // implementing CRAW_Reddit_Message for subreddit information
 // TO DO: bring it into use by implementing message endpoints
-typedef struct CRAW_Reddit_Message{
+typedef struct {
 	char *author;
 	char *body;
 	char *context;
@@ -41,3 +41,4 @@ typedef struct CRAW_Reddit_Message{
 	char *subreddit;
 	bool is_comment;
 } CRAW_Message;
+#endif

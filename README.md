@@ -129,7 +129,7 @@ Heres a basic example on how you could use it right now
 
 ```
 #include<stdio.h>
-#include<CRAW/CRAW.h>
+#include<CRAW/CRAW_Main.h>
 
 int main(){
 	CRAW *handle=CRAW_Init("Your client id", "Your secret key", "Your reddit username", "Your reddit password", "Your user agent");
