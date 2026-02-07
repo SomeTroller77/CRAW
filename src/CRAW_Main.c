@@ -101,11 +101,10 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
 
 // just a random ass free function i thought would be useful
 // To be used when CRAW is not needed, or at the end of the program
-CRAWcode CRAW_free(CRAW *handle){
+void CRAW_Free(CRAW *handle){
 	free(handle->internal->token_header);
 	free(handle->internal);
 	free(handle);
-	return CRAW_OK;
 }
 
 

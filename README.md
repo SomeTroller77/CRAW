@@ -71,7 +71,6 @@ here are some stuff which is stored and usable in CRAW_Account struct pointer
 ### CRAW_Subreddit
 | Data Type | Field | Description |
 | --------- | ----- | ----------- |
-| int | accounts_active | number of users active in the last 15 minutes |
 | char * | description | sidebar text |
 | char * | display_name | human name of the subreddit |
 | char * | header_img | full URL to the header image |
@@ -80,6 +79,7 @@ here are some stuff which is stored and usable in CRAW_Account struct pointer
 | char * | public_description | Description shown in subreddit search results |
 | bool | public_traffic | whether the subreddit's traffic page is publically accesssible |
 | long | subscribers | the number of redditors subscribed to this subreddit |
+| long | created_utc | UNIX Timestamp at which the subreddit was created |
 | CRAW_Subreddit_type | subreddit_type | the type of the subreddit (public, private, restricted) |
 | char * | title | title of the main page |
 | char * | url | the relative URL of the subreddit |
@@ -97,15 +97,22 @@ Functions implemented:-
 | Return type | Function declaration | Description |
 | ----------- | -------------------- | ----------- |
 | `CRAW *`    | `CRAW_Init("Client id", "secret_key", "username", "password", "user_agent")` | Returns a pointer to the struct CRAW, returns NULL if the servers are down or any arguments are wrong |
-| `CRAWcode` | `CRAW_free(CRAW *handle` | Returns a CRAWcode and frees the variable initialised using `CRAW_Init()` |
+| `void` | `CRAW_free(CRAW *handle` | frees the pointer initialised using `CRAW_Init()` |
 
 ### CRAW_Account 
 | Return type | Function declaration | Description |
 | ----------- | -------------------- | ----------- |
 | `CRAW_Account *` | `CRAW_Account_Init()` | Returns a pointer to a CRAW_Account struct which can be used to store an account data, returns NULL if your out of memory |
 | `CRAWcode` | `CRAW_Account_me(CRAW *handle, CRAW_Account * accHandle)` | Returns a CRAW code and writes the data of logged in account to passed accHandle |
-| `CRAWcode` | `CRAW_Account_getUserAbout(CRAW *handle, char *username, CRAW_Account *accHandle)` | Returns a CRAWcode and writes the provided data from api to the passed accHandle |
-| `CRAWcode` | `CRAW_Account_free(CRAW_Account *accHandle)` | returns CRAWcode and frees the passed accHandle (Must be run on all the CRAW_Account variables initialised using `CRAW_Account_Init()` ) |
+| `CRAWcode` | `CRAW_Account_getAbout(CRAW *handle, char *username, CRAW_Account *accHandle)` | Returns a CRAWcode and writes the provided data from api to the passed accHandle |
+| `void` | `CRAW_Account_Free(CRAW_Account *accHandle)` | frees the passed pointer (Must be run on all the CRAW_Account variables initialised using `CRAW_Account_Init()` ) |
+
+### CRAW_Subreddit
+| Return type | Function declaration | Description |
+| ----------- | -------------------- | ----------- |
+| `CRAW_Subreddit *` | `CRAW_Subreddit_Init` | returns the pointer of a CRAW_Subreddit struct |
+| `CRAWcode` | `CRAW_Subreddit_GetInfo(CRAW *handle, CRAW_Subreddit *subreddit, char *subreddit_name)` | inputs the information of a subreddit into the pointer subreddit |
+| `void` | `CRAW_Subreddit_Free(CRAW_Subreddit *ptr)` | frees the pointer ptr safely |
 
 
 ## CRAWcode list
@@ -120,7 +127,7 @@ Heres a list of CRAWcode which can be return by the functions with return type `
 | CRAW_UNAUTHORISED | If you get this error then check your username and password as the API was not able to authorize you ( there might be a chance of you being banned by api if you receive this error) |
 | CRAW_FORBIDDEN | If you get this error then check your username and password and then try again |
 | CRAW_TOO_MANY_REQUESTS | If you get this error, then take a chill pill and try it after 1-5 mins as you have been sending too many requests |
-| CRAW_UNKNOWN_CODE | If you get this error, then create a issue and send us your code and we will fix it as theres no CRAWcpde resgitered till now for this |
+| CRAW_UNKNOWN_CODE | If you get this error, then create a issue and send us your code and we will fix it as theres no CRAWcode registered till now for this |
 
 If you still get any on the CRAWcode after following the instructions, then you are welcome to create a issue and we will help you! 
 ## Basic example

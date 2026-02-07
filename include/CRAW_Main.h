@@ -43,7 +43,7 @@ typedef struct CRAW_Reddit_Bot{
 } CRAW;
 
 // CRAW_error_codes for checking the result of a task and for debugging purposes
-typedef enum CRAW_Error_Codes{
+typedef enum {
 	CRAW_OK,
 	CRAW_PARSE_ERROR,
 	CRAW_TOKEN_ERROR,
@@ -56,6 +56,7 @@ typedef enum CRAW_Error_Codes{
 	CRAW_UNKNOWN_CODE
 } CRAWcode;
 
+// enum to interpret the type of a subreddit
 typedef enum {
 	CRAW_SUBREDDIT_PUBLIC,
 	CRAW_SUBREDDIT_PRIVATE,
@@ -64,7 +65,10 @@ typedef enum {
 	CRAW_SUBREDDIT_ARCHIVED
 } CRAW_Subreddit_type;
 
+// the init function for the handle of the bot, must be run to be able to use other functions
 CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *username, const char *password, const char *user_agent);
-CRAWcode CRAW_free(CRAW *handle);
+
+// the function to safely free the handle of a bot
+void CRAW_Free(CRAW *handle);
 
 #endif

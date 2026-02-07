@@ -24,9 +24,7 @@ YOU HAVE BEEN WARNED
 #include "CRAW_Main.h"
 #include <stdbool.h>
 // implementing CRAW_Reddit_Subreddit for subreddit information
-// TO DO: bring it into use by implementing subreddit endpoints
 typedef struct CRAW_Reddit_Subreddit{
-	int accounts_active;
 	int comment_score_hide_mins;
 	char *description;
 	char *display_name;
@@ -39,13 +37,20 @@ typedef struct CRAW_Reddit_Subreddit{
 	char *submission_type;
 	char *submit_link_label;
 	char *submit_text_label;
+	long created_utc;
 	CRAW_Subreddit_type subreddit_type;
 	char *title;
 	char *url;
 	bool is_user_banned;
-	bool is_user_contributer;
+	bool is_user_contributor;
 	bool is_user_moderator;
 	bool is_user_subscriber;
 } CRAW_Subreddit;
-CRAWcode CRAW_Subreddit_GetInfo(CRAW *handle, char *subreddit_name);
+
+// the init function to initialize a CRAW_Subreddit
+CRAW_Subreddit *CRAW_Subreddit_Init();
+// to get info about a subreddit
+CRAWcode CRAW_Subreddit_getInfo(CRAW *handle, CRAW_Subreddit *subreddit, char *subreddit_name);
+// function to free the CRAW_Subreddit pointer efficiently
+void CRAW_Subreddit_Free(CRAW_Subreddit *ptr);
 #endif
