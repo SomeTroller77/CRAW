@@ -1,8 +1,9 @@
 # CRAW (C Reddit API Wrapper)
 <p align="center">
-  <img src="assets/logo.png" width="300">
+  <img src="assets/logo.png" width="500">
 </p>
-![GitHub repo size](https://img.shields.io/github/repo-size/SomeTroller77/CRAW)
+
+[GitHub repo size](https://img.shields.io/github/repo-size/SomeTroller77/CRAW)
 
 CRAW is a Reddit API Wrapper that is being developed in C to scrape data from reddit and make bots in C.
 
