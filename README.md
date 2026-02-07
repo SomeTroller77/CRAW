@@ -25,7 +25,6 @@
   <img src="https://img.shields.io/badge/Language-C-blue?logo=c" />
   <img src="https://img.shields.io/badge/Build-CMake-blue?logo=cmake" />
 </p>
-[GitHub repo size](https://img.shields.io/github/repo-size/SomeTroller77/CRAW)
 
 CRAW is a Reddit API Wrapper that is being developed in C to scrape data from reddit and make bots in C.
 
