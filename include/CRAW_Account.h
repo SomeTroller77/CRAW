@@ -1,5 +1,5 @@
 /*
-Copyright 2022 SomeTroller77 / Saksham Vitwekar and the contributers of the CRAW project
+Copyright 2022-2026 SomeTroller77 / Saksham Vitwekar and the contributers of the CRAW project
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -23,6 +23,12 @@ YOU HAVE BEEN WARNED
 #define CRAW_ACCOUNT_H
 #include "CRAW_Main.h"
 
+// the base struct for reddit accounts
+/*
+	TO DO:-
+		- add more fucking members to make it actually fucking usable
+		- masturbate
+*/
 typedef struct {
 	char *id;
 	char *name;
@@ -33,7 +39,7 @@ typedef struct {
 
 CRAWcode CRAW_Account_me(CRAW *handle, CRAW_Account *accHandle);
 CRAWcode CRAW_Account_getAbout(CRAW *handle, char *username, CRAW_Account *accHandle);
-CRAW_Account *CRAW_Account_Init(void);
+CRAW_Account *CRAW_Account_Init();
 void CRAW_Account_Free(CRAW_Account *accHandle);
 
 #endif

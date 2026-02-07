@@ -1,5 +1,5 @@
 /*
-Copyright 2023 SomeTroller77 / Saksham Vitwekar and the contributers of the CRAW project
+Copyright 2022-2026 SomeTroller77 / Saksham Vitwekar and the contributers of the CRAW project
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -46,28 +46,9 @@ CRAWcode CRAW_Subreddit_getInfo(CRAW *handle, CRAW_Subreddit *subreddit,char *su
     snprintf(suburl, len, "/r/%s/about/", subreddit_name);
     // sending the fucking request
     char *json = getData(handle, suburl);
-    // initializing the cJSON ptrs to extract values from the json
+   
     const cJSON *data = NULL;
-    const cJSON *comment_score_hide_mins = NULL;
-    const cJSON *description = NULL;
-    const cJSON *display_name = NULL;
-    const cJSON *header_img = NULL;
-    const cJSON *header_title = NULL;
-    const cJSON *over18 = NULL;
-    const cJSON *public_description = NULL;
-    const cJSON *public_traffic = NULL;
-    const cJSON *subscribers = NULL;
-    const cJSON *submission_type = NULL;
-    const cJSON *submit_link_label = NULL;
-    const cJSON *submit_text_label = NULL;
-    const cJSON *subreddit_type = NULL;
-    const cJSON *title = NULL;
-    const cJSON *url = NULL;
-    const cJSON *created_utc = NULL;
-    const cJSON *is_user_banned = NULL;
-    const cJSON *is_user_contributor = NULL;
-    const cJSON *is_user_moderator = NULL;
-    const cJSON *is_user_subscriber = NULL;
+    
     // parsing the received json
     cJSON *root = cJSON_Parse(json);
     // ptr safety
@@ -83,140 +64,165 @@ CRAWcode CRAW_Subreddit_getInfo(CRAW *handle, CRAW_Subreddit *subreddit,char *su
     // grabbing the main "data" object
     data = cJSON_GetObjectItemCaseSensitive(root, "data");
     if(data == NULL){
+        #ifdef CRAW_DEBUG_MODE
         printf("Data is empty");
+        #endif
         return CRAW_PARSE_ERROR;
     }
-    // grabbing the data, verifying its data type and storing it in the given CRAW_Subreddit pointer safely
-    comment_score_hide_mins = cJSON_GetObjectItemCaseSensitive(data, "comment_score_hide_mins");
-    if(!cJSON_IsNumber(comment_score_hide_mins)){
-        printf("comment_score_hide_mins not found");
-    }else{
-        subreddit->comment_score_hide_mins = comment_score_hide_mins->valueint;
+    CRAW_load_subreddit(data, subreddit);
+    // freeing the memory
+    cJSON_Delete(root);
+    free(json);
+    free(suburl);
+    return CRAW_OK;
+}
+
+CRAWcode CRAW_Subreddit_getHotPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name){
+    // adding the strlen of all base url and subreddit name to be used to allocate memory
+    size_t len = strlen("/r//hot/") + strlen(subreddit_name) + 1;
+    char *suburl = malloc(len);
+    // string interpolation
+    snprintf(suburl, len, "/r/%s/hot/", subreddit_name);
+    // sending the fucking request
+    char *json = getData(handle, suburl);
+   
+    const cJSON *data = NULL;
+    
+    // parsing the received json
+    cJSON *root = cJSON_Parse(json);
+    // ptr safety
+    if(root == NULL){
+        const char *error_ptr = cJSON_GetErrorPtr();
+        if (error_ptr != NULL){
+            fprintf(stderr, "Error before: %s\n", error_ptr);
+            fflush(stderr);
+        }
+        free(suburl);
+        return CRAW_PARSE_ERROR;
     }
-    description = cJSON_GetObjectItemCaseSensitive(data, "description");
-    if(!cJSON_IsString(description) || description->valuestring == NULL){
-        printf("description not found");
-    }else{
-        subreddit->description = strdup(description->valuestring);
+    // grabbing the main "data" object
+    data = cJSON_GetObjectItemCaseSensitive(root, "data");
+    if(data == NULL){
+        #ifdef CRAW_DEBUG_MODE
+        printf("Data is empty");
+        #endif
+        return CRAW_PARSE_ERROR;
     }
-    display_name = cJSON_GetObjectItemCaseSensitive(data, "display_name");
-    if(!cJSON_IsString(display_name) || display_name->valuestring == NULL){
-        printf("display_name not found");
-    }else{
-        subreddit->display_name = strdup(display_name->valuestring);
+    CRAW_load_listing(data, list);
+    // freeing the memory
+    cJSON_Delete(root);
+    free(json);
+    free(suburl);
+    return CRAW_OK;
+}
+CRAWcode CRAW_Subreddit_getNewPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name){
+    // adding the strlen of all base url and subreddit name to be used to allocate memory
+    size_t len = strlen("/r//new/") + strlen(subreddit_name) + 1;
+    char *suburl = malloc(len);
+    // string interpolation
+    snprintf(suburl, len, "/r/%s/new/", subreddit_name);
+    // sending the fucking request
+    char *json = getData(handle, suburl);
+   
+    const cJSON *data = NULL;
+    
+    // parsing the received json
+    cJSON *root = cJSON_Parse(json);
+    // ptr safety
+    if(root == NULL){
+        const char *error_ptr = cJSON_GetErrorPtr();
+        if (error_ptr != NULL){
+            fprintf(stderr, "Error before: %s\n", error_ptr);
+            fflush(stderr);
+        }
+        free(suburl);
+        return CRAW_PARSE_ERROR;
     }
-    header_img = cJSON_GetObjectItemCaseSensitive(data, "header_img");
-    if(!cJSON_IsString(header_img) || header_img->valuestring == NULL){
-        printf("header_image not found");
-    }else{
-        subreddit->header_img = strdup(header_img->valuestring);
+    // grabbing the main "data" object
+    data = cJSON_GetObjectItemCaseSensitive(root, "data");
+    if(data == NULL){
+        #ifdef CRAW_DEBUG_MODE
+        printf("Data is empty");
+        #endif
+        return CRAW_PARSE_ERROR;
     }
-    header_title = cJSON_GetObjectItemCaseSensitive(data, "header_title");
-    if(!cJSON_IsString(header_title) || header_title->valuestring == NULL){
-        printf("header_title not found");
-    }else{
-        subreddit->header_title = strdup(header_title->valuestring);
+    CRAW_load_listing(data, list);
+    // freeing the memory
+    cJSON_Delete(root);
+    free(json);
+    free(suburl);
+    return CRAW_OK;
+}
+CRAWcode CRAW_Subreddit_getRisingPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name){
+    // adding the strlen of all base url and subreddit name to be used to allocate memory
+    size_t len = strlen("/r//rising/") + strlen(subreddit_name) + 1;
+    char *suburl = malloc(len);
+    // string interpolation
+    snprintf(suburl, len, "/r/%s/rising/", subreddit_name);
+    // sending the fucking request
+    char *json = getData(handle, suburl);
+   
+    const cJSON *data = NULL;
+    
+    // parsing the received json
+    cJSON *root = cJSON_Parse(json);
+    // ptr safety
+    if(root == NULL){
+        const char *error_ptr = cJSON_GetErrorPtr();
+        if (error_ptr != NULL){
+            fprintf(stderr, "Error before: %s\n", error_ptr);
+            fflush(stderr);
+        }
+        free(suburl);
+        return CRAW_PARSE_ERROR;
     }
-    over18 = cJSON_GetObjectItemCaseSensitive(data, "over18");
-    if(!cJSON_IsBool(over18)){
-        printf("over18 not found");
-    }else{
-        subreddit->over18 = over18->valueint;
+    // grabbing the main "data" object
+    data = cJSON_GetObjectItemCaseSensitive(root, "data");
+    if(data == NULL){
+        #ifdef CRAW_DEBUG_MODE
+        printf("Data is empty");
+        #endif
+        return CRAW_PARSE_ERROR;
     }
-    public_description = cJSON_GetObjectItemCaseSensitive(data, "public_description");
-    if(!cJSON_IsString(public_description) || public_description->valuestring == NULL){
-        printf("public_description not found");
-    }else{
-        subreddit->public_description = strdup(public_description->valuestring);
+    CRAW_load_listing(data, list);
+    // freeing the memory
+    cJSON_Delete(root);
+    free(json);
+    free(suburl);
+    return CRAW_OK;
+}
+CRAWcode CRAW_Subreddit_getTopPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name){
+    // adding the strlen of all base url and subreddit name to be used to allocate memory
+    size_t len = strlen("/r//top/") + strlen(subreddit_name) + 1;
+    char *suburl = malloc(len);
+    // string interpolation
+    snprintf(suburl, len, "/r/%s/top/", subreddit_name);
+    // sending the fucking request
+    char *json = getData(handle, suburl);
+   
+    const cJSON *data = NULL;
+    
+    // parsing the received json
+    cJSON *root = cJSON_Parse(json);
+    // ptr safety
+    if(root == NULL){
+        const char *error_ptr = cJSON_GetErrorPtr();
+        if (error_ptr != NULL){
+            fprintf(stderr, "Error before: %s\n", error_ptr);
+            fflush(stderr);
+        }
+        free(suburl);
+        return CRAW_PARSE_ERROR;
     }
-    public_traffic = cJSON_GetObjectItemCaseSensitive(data, "public_traffic");
-    if(!cJSON_IsBool(public_traffic)){
-        printf("public_traffic not found");
-    }else{
-        subreddit->public_traffic = public_traffic->valueint;
+    // grabbing the main "data" object
+    data = cJSON_GetObjectItemCaseSensitive(root, "data");
+    if(data == NULL){
+        #ifdef CRAW_DEBUG_MODE
+        printf("Data is empty");
+        #endif
+        return CRAW_PARSE_ERROR;
     }
-    subscribers = cJSON_GetObjectItemCaseSensitive(data, "subscribers");
-    if(!cJSON_IsNumber(subscribers)){
-        printf("subscribers not found");
-    }else{
-        subreddit->subscribers = subscribers->valueint;
-    }
-    submission_type = cJSON_GetObjectItemCaseSensitive(data, "submission_type");
-    if(!cJSON_IsString(submission_type) || submission_type->valuestring == NULL){
-        printf("submission_type not found");
-    }else{
-        subreddit->submission_type = strdup(submission_type->valuestring);
-    }
-    submit_link_label = cJSON_GetObjectItemCaseSensitive(data, "submit_link_label");
-    if(!cJSON_IsString(submit_link_label) ||submit_link_label->valuestring == NULL){
-        printf("submit_link_label not found");
-    }else{
-        subreddit->submit_link_label = strdup(submit_link_label->valuestring);
-    }
-    submit_text_label = cJSON_GetObjectItemCaseSensitive(data, "submit_text_label");
-    if(!cJSON_IsString(submit_text_label) || submit_text_label->valuestring == NULL){
-        printf("submit_text_label not found");
-    }else{
-        subreddit->submit_text_label = strdup(submit_text_label->valuestring);
-    }
-    title = cJSON_GetObjectItemCaseSensitive(data, "title");
-    if(!cJSON_IsString(title) || title->valuestring == NULL){
-        printf("title not found");
-    }else{
-        subreddit->title = strdup(title->valuestring);
-    }
-    url = cJSON_GetObjectItemCaseSensitive(data, "url");
-    if(!cJSON_IsString(url) || url->valuestring == NULL){
-        printf("url not found");
-    }else{
-        subreddit->url = strdup(url->valuestring);
-    }
-    is_user_banned = cJSON_GetObjectItemCaseSensitive(data, "user_is_banned");
-    if(!cJSON_IsBool(is_user_banned)){
-        printf("is_user_banned not found");
-    }else{
-        subreddit->is_user_banned = is_user_banned->valueint;
-    }
-    is_user_contributor = cJSON_GetObjectItemCaseSensitive(data, "user_is_contributor");
-    if(!cJSON_IsBool(is_user_contributor)){
-        printf("is_user_contributor not found");
-    }else{
-        subreddit->is_user_contributor = is_user_contributor->valueint;
-    }
-    is_user_moderator = cJSON_GetObjectItemCaseSensitive(data, "user_is_moderator");
-    if(!cJSON_IsBool(is_user_moderator)){
-        printf("is_user_moderator not found");
-    }else{
-        subreddit->is_user_moderator = is_user_moderator->valueint;
-    }
-    is_user_subscriber = cJSON_GetObjectItemCaseSensitive(data, "user_is_subscriber");
-    if(!cJSON_IsBool(is_user_subscriber)){
-        printf("is_user_subscriber not found");
-    }else{
-        subreddit->is_user_subscriber = is_user_subscriber->valueint;
-    }
-    created_utc = cJSON_GetObjectItemCaseSensitive(data, "created_utc");
-    if(!cJSON_IsNumber(created_utc)){
-        printf("created_utc not found");
-    }else{
-        subreddit->created_utc = created_utc->valueint;
-    }
-    subreddit_type = cJSON_GetObjectItemCaseSensitive(data, "subreddit_type");
-    if(!cJSON_IsString(subreddit_type) || subreddit_type->valuestring == NULL){
-        printf("subreddit_type not found");
-    }
-    // comparing the value of the subreddit_type field and storing it in the form of enum CRAW_SUBREDDIT_TYPE (see CRAW.h for more info)
-    if(strcmp(subreddit_type->valuestring, "public") == 0){
-        subreddit->subreddit_type = CRAW_SUBREDDIT_PUBLIC;
-    }else if(strcmp(subreddit_type->valuestring, "private" ) == 0){
-        subreddit->subreddit_type = CRAW_SUBREDDIT_PRIVATE;
-    }else if(strcmp(subreddit_type->valuestring, "restricted") == 0){
-        subreddit->subreddit_type = CRAW_SUBREDDIT_RESTRICTED;
-    }else if(strcmp(subreddit_type->valuestring, "gold_restricted") == 0){
-        subreddit->subreddit_type = CRAW_SUBREDDIT_GOLD_RESTRICTED;
-    }else if(strcmp(subreddit_type->valuestring, "archived") == 0){
-        subreddit->subreddit_type = CRAW_SUBREDDIT_ARCHIVED;
-    }
+    CRAW_load_listing(data, list);
     // freeing the memory
     cJSON_Delete(root);
     free(json);

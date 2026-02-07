@@ -1,5 +1,5 @@
 /*
-Copyright 2023 SomeTroller77 / Saksham Vitwekar and the contributers of the CRAW project
+Copyright 2022-2026 SomeTroller77 / Saksham Vitwekar and the contributers of the CRAW project
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -16,14 +16,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” 
 DO NOT MESS ANYTHING IN ANY FILE AS IT WILL BREAK THE LIBRARY OR CAUSE IT
 TO NOT WORK
 
+
 YOU HAVE BEEN WARNED
 */
 
 #ifndef CRAW_MAIN_H
 #define CRAW_MAIN_H
 #include <curl/curl.h>
-
-#include<stdio.h>
 // The base struct, the daddy of all the functions, ohhhh yeahhhh
 typedef struct CRAW_Reddit_Bot{
 	const char *client_id;
@@ -65,6 +64,20 @@ typedef enum {
 	CRAW_SUBREDDIT_ARCHIVED
 } CRAW_Subreddit_type;
 
+typedef enum {
+	CRAW_COMMENT,
+	CRAW_ACCOUNT,
+	CRAW_LINK,
+	CRAW_MESSAGE,
+	CRAW_SUBREDDIT,
+	CRAW_AWARD,
+	CRAW_UNKNOWN_DATATYPE
+} CRAW_Datatype;
+typedef enum{
+	CRAW_UPVOTED,
+	CRAW_DOWNVOTED,
+	CRAW_NO_VOTE
+} CRAW_Vote;
 // the init function for the handle of the bot, must be run to be able to use other functions
 CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *username, const char *password, const char *user_agent);
 

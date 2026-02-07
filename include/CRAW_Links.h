@@ -13,54 +13,39 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” 
 */
 
 /*
-DO NOT MESS WITH ANYTHING AS IT WILL BREAK THE LIBRARY OR CAUSE IT
-TO NOT WORK PROPERLY
+DO NOT MESS ANYTHING IN ANY FILE AS IT WILL BREAK THE LIBRARY OR CAUSE IT
+TO NOT WORK
 
 YOU HAVE BEEN WARNED
 */
 
-#ifndef CRAW_SUBREDDIT_H
-#define CRAW_SUBREDDIT_H
-#include "CRAW_Main.h"
-#include <stdbool.h>
-// implementing CRAW_Reddit_Subreddit for subreddit information
-typedef struct CRAW_Reddit_Subreddit{
-	int comment_score_hide_mins;
-	char *description;
-	char *display_name;
-	char *header_img;
-	char *header_title;
-	bool over18;
-	char *public_description;
-	bool public_traffic;
-	long subscribers;
-	char *submission_type;
-	char *submit_link_label;
-	char *submit_text_label;
-	long created_utc;
-	CRAW_Subreddit_type subreddit_type;
-	char *title;
-	char *url;
-	bool is_user_banned;
-	bool is_user_contributor;
-	bool is_user_moderator;
-	bool is_user_subscriber;
-} CRAW_Subreddit;
+#ifndef CRAW_LINKS_H
+#define CRAW_LINKS_H
+#include "CRAW.h"
 
-// the init function to initialize a CRAW_Subreddit
-CRAW_Subreddit *CRAW_Subreddit_Init();
-// to get info about a subreddit
-CRAWcode CRAW_Subreddit_getInfo(CRAW *handle, CRAW_Subreddit *subreddit, char *subreddit_name);
-CRAWcode CRAW_Subreddit_getHotPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name);
-CRAWcode CRAW_Subreddit_getNewPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name);
-/*
-
-	CRAWcode CRAW_Subreddit_getTopPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name)
-	TO DO:- 
-		- To implement post data function to get TopPosts and Controversial Posts working
-
-*/
-CRAWcode CRAW_Subreddit_getRisingPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name);
-// function to free the CRAW_Subreddit pointer efficiently
-void CRAW_Subreddit_Free(CRAW_Subreddit *ptr);
+// the base struct for CRAW_Link
+typedef struct{
+    char *author;
+    char *author_fullname;
+    char *domain;
+    bool hidden;
+    bool is_self;
+    CRAW_Vote vote_status;
+    bool is_locked;
+    int num_comments;
+    bool over_18;
+    char *permalink;
+    bool is_saved;
+    int score;
+    char *selftext;
+    char *subreddit;
+    char *subreddit_id;
+    char *thumbnail;
+    char *title;
+    char *url;
+    long edited;
+    bool is_stickied;
+} CRAW_Link;
+CRAW_Link *CRAW_Link_Init();
+void CRAW_Link_Free(CRAW_Link *ptr);
 #endif

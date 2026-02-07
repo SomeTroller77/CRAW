@@ -1,5 +1,5 @@
 /*
-Copyright 2022 SomeTroller77 / Saksham Vitwekar and the contributers of the CRAW project
+Copyright 2022-2026 SomeTroller77 / Saksham Vitwekar and the contributers of the CRAW project
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 

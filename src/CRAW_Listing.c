@@ -10,57 +10,51 @@ Redistribution and use in source and binary forms, with or without modification,
 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 */
 
 /*
-DO NOT MESS WITH ANYTHING AS IT WILL BREAK THE LIBRARY OR CAUSE IT
-TO NOT WORK PROPERLY
+DO NOT MESS ANYTHING IN ANY FILE AS IT WILL BREAK THE LIBRARY OR CAUSE IT
+TO NOT WORK
 
 YOU HAVE BEEN WARNED
 */
 
-#ifndef CRAW_SUBREDDIT_H
-#define CRAW_SUBREDDIT_H
-#include "CRAW_Main.h"
-#include <stdbool.h>
-// implementing CRAW_Reddit_Subreddit for subreddit information
-typedef struct CRAW_Reddit_Subreddit{
-	int comment_score_hide_mins;
-	char *description;
-	char *display_name;
-	char *header_img;
-	char *header_title;
-	bool over18;
-	char *public_description;
-	bool public_traffic;
-	long subscribers;
-	char *submission_type;
-	char *submit_link_label;
-	char *submit_text_label;
-	long created_utc;
-	CRAW_Subreddit_type subreddit_type;
-	char *title;
-	char *url;
-	bool is_user_banned;
-	bool is_user_contributor;
-	bool is_user_moderator;
-	bool is_user_subscriber;
-} CRAW_Subreddit;
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <curl/curl.h>
+#include "../include/cJSON.h"
+#define CRAW_PRIVATE_DO_NOT_MESS
+#include "../include/CRAW_PRIVATE.h"
+#include <stdlib.h>
+#include<string.h>
+#include "../include/CRAW.h"
 
-// the init function to initialize a CRAW_Subreddit
-CRAW_Subreddit *CRAW_Subreddit_Init();
-// to get info about a subreddit
-CRAWcode CRAW_Subreddit_getInfo(CRAW *handle, CRAW_Subreddit *subreddit, char *subreddit_name);
-CRAWcode CRAW_Subreddit_getHotPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name);
-CRAWcode CRAW_Subreddit_getNewPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name);
+CRAW_Listing *CRAW_Listing_Init(){
+    return malloc(sizeof(CRAW_Listing));
+}
+
+
+// the free function for the shitty reddit listing struct that ive made, god i need help
+void CRAW_Listing_Free(CRAW_Listing *ptr){
+    if(!ptr) return;
+    for(int i = 0; i < ptr->array_size; i++){
+        if(ptr->children[i].type == CRAW_ACCOUNT){
+            CRAW_Account_Free(ptr->children[i].data);
+        }else if(ptr->children[i].type == CRAW_SUBREDDIT){
+            CRAW_Subreddit_Free(ptr->children[i].data);
+        }else if(ptr->children[i].type == CRAW_LINK){
+            CRAW_Link_Free(ptr->children[i].data);
+        }
+    }
+    free(ptr->children);
+    free(ptr->after);
+    free(ptr);
+}
 /*
-
-	CRAWcode CRAW_Subreddit_getTopPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name)
-	TO DO:- 
-		- To implement post data function to get TopPosts and Controversial Posts working
-
+    TO DO:-
+        - Make a function to check for the datatype of the children of the
+            CRAW_List and make it more convenient for developers to use
+            C Reddit API Wrapper
 */
-CRAWcode CRAW_Subreddit_getRisingPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name);
-// function to free the CRAW_Subreddit pointer efficiently
-void CRAW_Subreddit_Free(CRAW_Subreddit *ptr);
-#endif

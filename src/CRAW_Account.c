@@ -1,5 +1,5 @@
 /*
-Copyright 2023 SomeTroller77 / Saksham Vitwekar and the contributers of the CRAW project
+Copyright 2022-2026 SomeTroller77 / Saksham Vitwekar and the contributers of the CRAW project
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -34,13 +34,10 @@ YOU HAVE BEEN WARNED
 #define SLEEP(time) Sleep(time*1000)
 #else
 #include<unistd.h>
-#ifndef SLEEP
-#define SLEEP(time) sleep(time)
-#endif
 #endif
 
 // initializing the CRAW_Account struct
-CRAW_Account *CRAW_Account_Init(void){
+CRAW_Account *CRAW_Account_Init(){
 	CRAW_Account *handle=malloc(sizeof(CRAW_Account));
 	if (handle == NULL){
 	    return NULL;
@@ -70,41 +67,14 @@ CRAWcode CRAW_Account_me(CRAW *handle, CRAW_Account *accHandle) {
 		return check_http_code(handle->internal->error_code); //returning the error as a CRAWcode
 	}
 	const cJSON *data = NULL;
-	const cJSON *name=NULL;
-	const cJSON *total_karma=NULL;
-	const cJSON *id=NULL;
-	const cJSON *created_utc=NULL;
 	data = cJSON_GetObjectItemCaseSensitive(monitor_json, "data");
 	if(data == NULL){
+		#ifdef CRAW_DEBUG_MODE
 		printf("data not found");
+		#endif
 		return CRAW_PARSE_ERROR;
 	}
-	name=cJSON_GetObjectItemCaseSensitive(data, "name");
-	if(!cJSON_IsString(name) || name->valuestring == NULL){
-		printf("name not found");
-	}else{
-		accHandle->name=strdup(name->valuestring);
-	} //strdup because i tried to use malloc and after i freed name, it started to cause Seg Fault, dont blame me i was 12 years old
-	total_karma=cJSON_GetObjectItemCaseSensitive(data, "total_karma");
-	if(!cJSON_IsNumber(total_karma)){
-		printf("total_karma not found");
-	}else{
-		accHandle->total_karma=total_karma->valueint;
-	}
-	
-	created_utc=cJSON_GetObjectItemCaseSensitive(data, "created_utc");
-	if(!cJSON_IsNumber(created_utc)){
-		printf("created_utc not found");
-	}else {
-		accHandle->created_utc=(long)created_utc->valuedouble;
-	}
-	id=cJSON_GetObjectItemCaseSensitive(data, "id");
-	if(!cJSON_IsString(id) || id->valuestring == NULL){
-		printf("id not found");
-	}else{
-		accHandle->id=strdup(id->valuestring);
-	} //same as name
-
+	CRAW_load_account(data, accHandle);
 	// freeing the data as im nice enough to not cause a memory leak and cause your computer to slow down :D
 	cJSON_Delete(monitor_json);
 	free(json);
@@ -134,40 +104,12 @@ CRAWcode CRAW_Account_getAbout(CRAW *handle, char *username, CRAW_Account *accHa
 	// getting the data object to take user information from it
 	data=cJSON_GetObjectItemCaseSensitive(root, "data");
 	if(data == NULL){
+		#ifdef CRAW_DEBUG_MODE
 		printf("data not found");
+		#endif
 		return CRAW_PARSE_ERROR;
 	}
-	const cJSON *name=NULL;
-	const cJSON *id=NULL;
-	const cJSON *total_karma=NULL;
-	const cJSON *created_utc=NULL;
-	// grabbing the required information
-	name=cJSON_GetObjectItemCaseSensitive(data, "name");
-	if(!cJSON_IsString(name) || name->valuestring == NULL){
-		printf("name not found");
-	}else{
-		accHandle->name=strdup(name->valuestring);
-	}
-	id=cJSON_GetObjectItemCaseSensitive(data, "id");
-	if(!cJSON_IsString(id) || id->valuestring == NULL){
-		printf("id not found");
-	}else{
-		accHandle->id=strdup(id->valuestring);
-	}
-	total_karma=cJSON_GetObjectItemCaseSensitive(data, "total_karma");
-	if(!cJSON_IsNumber(total_karma)){
-		printf("total_karma not found");
-	}else{
-		accHandle->total_karma=total_karma->valueint;
-	}
-	
-	created_utc=cJSON_GetObjectItemCaseSensitive(data, "created_utc");
-	if(!cJSON_IsNumber(created_utc)){
-		printf("created_utc not found");
-	}else {
-		accHandle->created_utc=(long)created_utc->valuedouble;
-	}
-	
+	CRAW_load_account(data, accHandle);
 	// freeing up the pointers
 	cJSON_Delete(root);
 	free(json);

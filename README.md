@@ -40,11 +40,15 @@ It is designed to help developers fetch Reddit data and build bots using pure C,
 - [Data structures](#Data-Structures)
 	- [CRAW_Account](#CRAW_Account)
 	- [CRAW_Subreddit](#craw_subreddit)
+	- [CRAW_Links](#craw_links)
 - [Functions](#Functions)
 	- [Main functions](#craw_main)
 	- [Account](#craw_account-1)
 	- [Subreddit](#craw_subreddit-1)
-- [CRAWcode list](#CRAWcode-list)
+- [List of enums](#enums)
+	-[CRAW_Subreddit_type](#craw_subreddit_type)
+	-[CRAW_Vote](#craw_vote)
+	- [CRAWcode](#crawcode)
 - [Basic example](#Basic-example)
 
 
@@ -118,6 +122,28 @@ here are some stuff which is stored and usable in CRAW_Account struct pointer
 | `bool` | `is_user_moderator` | whether the logged-in user is a moderator of the subreddit |
 | `bool` | `is_user_subscriber` | whether the logged-in user is subscribed to the subreddit |
 
+### CRAW_Links
+| Data Type | Field | Description |
+| --------- | ----- | ----------- |
+| `char *` | `author` | the name of the author |
+| `char *` | `author_fullname` | the id of the author |
+| `char *` | `domain` | the domain from which the link is originated from |
+| `bool` | `hidden` | whether the post is hidden from the user or not |
+| `bool` | `is_self` | whether the post is made by the logged-in user |
+| `CRAW_Vote` | `vote_status` | whether the logged-in user has voted on the link |
+| `bool` | `is_locked` | whether the post is locked |
+| `int` | `num_comments` | number of comments the link has |
+| `bool` | `over_18` | whether the post is NSFW or not |
+| `char *` | `permalink` | the permalink of the post |
+| `bool` | `is_saved` | whether the post is saved by the logged-in user |
+| `int` | `score` | the difference between the upvotes and the downvotes of the link |
+| `char *` | `selftext` | the content of the post |
+| `char *` | `subreddit` | the name of the subreddit without /r/ |
+| `char *` | `subreddit_id` | the id of the subreddit |
+| `char *` | `title` | the title of the post |
+| `char *` | `url`| the url of the post |
+| `long` | `edited` | the UNIX Timestamp when the post was edited, null when not edited |
+| `bool` | `is_stickied` | whether the post has been stickied in a subreddit |
 
 ## Functions
 
@@ -142,11 +168,47 @@ Functions implemented:-
 | ----------- | -------------------- | ----------- |
 | `CRAW_Subreddit *` | `CRAW_Subreddit_Init` | returns the pointer of a CRAW_Subreddit struct |
 | `CRAWcode` | `CRAW_Subreddit_GetInfo(CRAW *handle, CRAW_Subreddit *subreddit, char *subreddit_name)` | inputs the information of a subreddit into the pointer subreddit |
+| ` CRAWcode` | `CRAW_Subreddit_getHotPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name) | get the hot posts in a subreddit (default 25, option to customize will be implemented soon) |
+| ` CRAWcode` | `CRAW_Subreddit_getNewPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name) | get the new posts in a subreddit (default 25, option to customize will be implemented soon) |
+| ` CRAWcode` | `CRAW_Subreddit_getRisingPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name) | get the rising posts in a subreddit (default 25, option to customize will be implemented soon) |
 | `void` | `CRAW_Subreddit_Free(CRAW_Subreddit *ptr)` | frees the pointer ptr safely |
 
 
-## CRAWcode list
-Heres a list of CRAWcode which can be return by the functions with return type `CRAWcode`
+## Enums 
+Enums make it easy for developers to be able to use conditions without needing to remember the int values of different entities
+
+### CRAW_Datatype
+The datatypes which are used by CRAW to manage listing as it utilizes void pointers which are needed to be casted to be able to compile it
+
+Heres a list of datatypes which CRAW uses
+| CRAW_Datatype | Description |
+| ------------------ | -------------------------------- |
+| `CRAW_COMMENT` | A reddit comment data |
+| `CRAW_ACCOUNT` | A reddit account data |
+| `CRAW_LINK` | A reddit link data (eg subreddit posts etc) |
+| `CRAW_MESSAGE` | A reddit message data |
+| `CRAW_SUBREDDIT` | A subreddit data | 
+| `CRAW_AWARD` | A reddit award data |
+| `CRAW_UNKNOWN_DATATYPE` | Datatype which has not been implemented into CRAW (yet) |
+
+### CRAW_Subreddit_type
+Determines the visibility status of a subreddit
+| CRAW_Subreddit_type | Description |
+| ------------------ | -------------------------------- |
+| `CRAW_SUBREDDIT_PUBLIC` | A public subreddit |
+| `CRAW_SUBREDDIT_PRIVATE` | A private subreddit |
+| `CRAW_SUBREDDIT_RESTRICTED` | A restricted subreddit |
+
+### CRAW_Vote
+Tells you whether the logged-in user has upvoted, downvoted, or not voted to the post
+| CRAW_Vote | Description |
+| ------------------ | -------------------------------- |
+| `CRAW_UPVOTED` | User has upvoted the post |
+| `CRAW_DOWNVOTED` | User has downvoted the post |
+| `CRAW_NO_VOTE` | User has neither upvoted nor downvoted the post |
+
+### CRAWcode
+Heres a list of CRAWcode which may be return by the functions with return type `CRAWcode`
 
 | CRAWcode | Description |
 | ------------------ | -------------------------------- |
@@ -169,17 +231,23 @@ Heres a basic example on how you could use it right now
 #include<CRAW/CRAW_Main.h>
 
 int main(){
+	// initializing the handler (logging into the oauth api)
 	CRAW *handle=CRAW_Init("Your client id", "Your secret key", "Your reddit username", "Your reddit password", "Your user agent");
 	if(handle == NULL){
 		return 1;
 	}
 	CRAWcode res;
 	CRAW_Account *myInfo=CRAW_Account_Init();
-	res=CRAW_Account_me(handle, myInfo);
+	res=CRAW_Account_me(handle, myInfo); // getting the info of the logged-in account
 	if(res != CRAW_OK){
 		return 2;
 	}
 	printf("My Name: %s", myInfo->name);
+	CRAW_Listing *a = CRAW_Listing_Init();
+	CRAW_Subreddit_getNewPosts(handle, a, "hacking");
+	CRAW_Link *test = a->children[2].data; // MANDATORY TO CAST THE void * POINTER TO A VALID CRAW_Datatype
+	printf("\n\n\n%s\nTotal posts:- %d", test->permalink, a->array_size);
+	CRAW_Listing_Free(a);
 	CRAW_Account_Free(myInfo);
 	CRAW_Free(handle);
 	return 0;

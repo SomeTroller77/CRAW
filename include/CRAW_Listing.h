@@ -1,5 +1,5 @@
 /*
-Copyright 2022 SomeTroller77 / Saksham Vitwekar and the contributers of the CRAW project
+Copyright 2022-2026 SomeTroller77 / Saksham Vitwekar and the contributers of the CRAW project
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -23,9 +23,21 @@ YOU HAVE BEEN WARNED
 #define CRAW_LISTING_H
 #include "CRAW_Main.h"
 
+// struct to make dynamic datatype actually fucking work for reddit listings
+typedef struct {
+    CRAW_Datatype type;
+    void *data;
+} CRAW_children;
+
+// the daddy struct for listing, ohh yeahhh
 typedef struct{
-    char *before;
     char *after;
-    void **children;
+    int array_size;
+    int dist;
+    CRAW_children *children;
 } CRAW_Listing;
+
+//init and free
+CRAW_Listing *CRAW_Listing_Init();
+void CRAW_Listing_Free(CRAW_Listing *ptr);
 #endif

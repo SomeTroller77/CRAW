@@ -1,5 +1,5 @@
 /*
-Copyright 2022 SomeTroller77 / Saksham Vitwekar and the contributers of the CRAW project
+Copyright 2022-2026 SomeTroller77 / Saksham Vitwekar and the contributers of the CRAW project
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -26,6 +26,7 @@ YOU HAVE BEEN WARNED
 #include "CRAW.h"
 #include<curl/curl.h>
 #include<stdlib.h>
+#include "cJSON.h"
 #ifdef _WIN32
 #include<Windows.h>
 #define SLEEP(time) Sleep(time)
@@ -47,12 +48,23 @@ struct linked_list{
 	char *header;
 	struct linked_list *i;
 };
-
+// functions needed by libcurl to fucking function
 size_t cb(void *buf, size_t size, size_t count, void *userp);
 size_t hdf(char *b, size_t size, size_t nitems, void *userdata);
 char *getData(CRAW *handle, const char *url);
 CRAWcode check_http_code(long code);
+
+//loader functions to make parsing easier
+void CRAW_load_account(const cJSON *data, CRAW_Account *ptr);
+void CRAW_load_subreddit(const cJSON *data, CRAW_Subreddit *ptr);
+void CRAW_load_link(const cJSON *data, CRAW_Link *ptr);
+void CRAW_load_listing(cJSON *data, CRAW_Listing *listing);
 #else
 #error "Macro not defined"
 #endif
 #endif
+
+/*
+CRAW_PRIVATE my ass, i made this so that no one would be able to use my shitty private functions and randomly break the library
+and then break my ass
+*/
