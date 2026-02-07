@@ -180,8 +180,8 @@ int main(){
 		return 2;
 	}
 	printf("My Name: %s", myInfo->name);
-	CRAW_Account_free(myInfo);
-	CRAW_free(handle);
+	CRAW_Account_Free(myInfo);
+	CRAW_Free(handle);
 	return 0;
 }
 ```
