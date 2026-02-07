@@ -14,6 +14,7 @@ You can build it and see if it works or not.
 - [Functions](#Functions)
 	- [Main functions](#craw_main)
 	- [Account](#craw_account-1)
+	- [Subreddit](#craw_subreddit-1)
 - [CRAWcode list](#CRAWcode-list)
 - [Basic example](#Basic-example)
 
