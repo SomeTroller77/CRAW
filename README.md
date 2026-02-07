@@ -1,4 +1,7 @@
 # CRAW (C Reddit API Wrapper)
+<p align="center">
+  <img src="assets/logo.png" width="300">
+</p>
 ![GitHub repo size](https://img.shields.io/github/repo-size/SomeTroller77/CRAW)
 
 CRAW is a Reddit API Wrapper that is being developed in C to scrape data from reddit and make bots in C.
@@ -53,10 +56,10 @@ CRAW uses struct to store the data. heres the table of the structs in C
 
 | Keyword | Description |
 | --- | --- |
-| CRAW | It is used to store the developers data that developers provide which will be used to send requests |
-| CRAW_Account | It stores the account data which is sent by the reddit API |
-| CRAW_Subreddit | It stores the data of subreddit which is sent by the reddit API |
-| CRAW_Messages | It stores the data of a message/comment which is sent by the reddit API |
+| `CRAW` | It is used to store the developers data that developers provide which will be used to send requests |
+| `CRAW_Account` | It stores the account data which is sent by the reddit API |
+| `CRAW_Subreddit` | It stores the data of subreddit which is sent by the reddit API |
+| `CRAW_Messages` | It stores the data of a message/comment which is sent by the reddit API |
 
 ### CRAW_Account
 
@@ -64,30 +67,30 @@ here are some stuff which is stored and usable in CRAW_Account struct pointer
 
 | Data Type | Field | Description |
 | --------- | ---- | ----------- |
-| char * | id | its stores the reddit id of the account |
-| char * | name | it stores the username of the account |
-| long | created_utc | it stores the time of creation of account in EPOCH time |
-| int | total karma | it stores the total karma of the account |
+| `char *` | `id` | its stores the reddit id of the account |
+| `char *` | `name` | it stores the username of the account |
+| `long` | `created_utc` | it stores the time of creation of account in EPOCH time |
+| `int` | `total karma` | it stores the total karma of the account |
 
 ### CRAW_Subreddit
 | Data Type | Field | Description |
 | --------- | ----- | ----------- |
-| char * | description | sidebar text |
-| char * | display_name | human name of the subreddit |
-| char * | header_img | full URL to the header image |
-| char * | header_title | description of header |
-| bool | over18 | whether the subreddit is marked as NSFW |
-| char * | public_description | Description shown in subreddit search results |
-| bool | public_traffic | whether the subreddit's traffic page is publically accesssible |
-| long | subscribers | the number of redditors subscribed to this subreddit |
-| long | created_utc | UNIX Timestamp at which the subreddit was created |
-| CRAW_Subreddit_type | subreddit_type | the type of the subreddit (public, private, restricted) |
-| char * | title | title of the main page |
-| char * | url | the relative URL of the subreddit |
-| bool | is_user_banned | whether the logged-in user is banned from the subreddit
-| bool | is_user_contributor | whether the logged-in user is an approved submitter of the reddit |
-| bool | is_user_moderator | whether the logged-in user is a moderator of the subreddit |
-| bool | is_user_subscriber | whether the logged-in user is subscribed to the subreddit |
+| `char *` | `description` | sidebar text |
+| `char *` | `display_name` | human name of the subreddit |
+| `char *` | `header_img` | full URL to the header image |
+| `char *` | `header_title` | description of header |
+| `bool` | `over18` | whether the subreddit is marked as NSFW |
+| `char *` | `public_description` | Description shown in subreddit search results |
+| `bool` | `public_traffic` | whether the subreddit's traffic page is publically accesssible |
+| `long`| `subscribers` | the number of redditors subscribed to this subreddit |
+| `long` | `created_utc` | UNIX Timestamp at which the subreddit was created |
+| `CRAW_Subreddit_type` | subreddit_type | the type of the subreddit (public, private, restricted) |
+| `char *` | `title` | title of the main page |
+| `char *` | `url` | the relative URL of the subreddit |
+| `bool` | `is_user_banned` | whether the logged-in user is banned from the subreddit
+| `bool` | `is_user_contributor` | whether the logged-in user is an approved submitter of the reddit |
+| `bool` | `is_user_moderator` | whether the logged-in user is a moderator of the subreddit |
+| `bool` | `is_user_subscriber` | whether the logged-in user is subscribed to the subreddit |
 
 
 ## Functions
@@ -121,14 +124,14 @@ Heres a list of CRAWcode which can be return by the functions with return type `
 
 | CRAWcode | Description |
 | ------------------ | -------------------------------- |
-| CRAW_OK  | If you get this CRAWcode, then your all good to go |
-| CRAW_PARSE_ERROR | If you get this CRAWcode, then there a parsing error, recheck your parameters and try again |
-| CRAW_GRAB_ERROR | If you get this error, then check your internet as the wrapper couldnt grab the data from API |
-| CRAW_NOT_FOUND | If you get this error then check your parameter as the API couldnt find the data your looking for |
-| CRAW_UNAUTHORISED | If you get this error then check your username and password as the API was not able to authorize you ( there might be a chance of you being banned by api if you receive this error) |
-| CRAW_FORBIDDEN | If you get this error then check your username and password and then try again |
-| CRAW_TOO_MANY_REQUESTS | If you get this error, then take a chill pill and try it after 1-5 mins as you have been sending too many requests |
-| CRAW_UNKNOWN_CODE | If you get this error, then create a issue and send us your code and we will fix it as theres no CRAWcode registered till now for this |
+| `CRAW_OK ` | If you get this CRAWcode, then your all good to go |
+| `CRAW_PARSE_ERROR` | If you get this CRAWcode, then there a parsing error, recheck your parameters and try again |
+| `CRAW_GRAB_ERROR` | If you get this error, then check your internet as the wrapper couldnt grab the data from API |
+| `CRAW_NOT_FOUND` | If you get this error then check your parameter as the API couldnt find the data your looking for |
+| `CRAW_UNAUTHORISED` | If you get this error then check your username and password as the API was not able to authorize you ( there might be a chance of you being banned by api if you receive this error) |
+| `CRAW_FORBIDDEN` | If you get this error then check your username and password and then try again |
+| `CRAW_TOO_MANY_REQUESTS` | If you get this error, then take a chill pill and try it after 1-5 mins as you have been sending too many requests |
+| `CRAW_UNKNOWN_CODE` | If you get this error, then create a issue and send us your code and we will fix it as theres no CRAWcode registered till now for this |
 
 If you still get any on the CRAWcode after following the instructions, then you are welcome to create a issue and we will help you! 
 ## Basic example
