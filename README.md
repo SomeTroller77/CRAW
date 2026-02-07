@@ -26,10 +26,14 @@
   <img src="https://img.shields.io/badge/Build-CMake-blue?logo=cmake" />
 </p>
 
-CRAW is a Reddit API Wrapper that is being developed in C to scrape data from reddit and make bots in C.
+## 📌 About
 
-It is still under development and you can only use it to get your own data for now but i will be working on this project to develop it as soon and possible.
-You can build it and see if it works or not.
+**CRAW (C Reddit API Wrapper)** is a lightweight Reddit API wrapper written in **C**.
+
+It is designed to help developers fetch Reddit data and build bots using pure C, while keeping the library fast, simple, and easy to integrate into any project.
+
+⚠️ **This project is still under development**, and currently supports only limited features. More endpoints and functionality will be added soon.
+
 ## Table of contents
 - [Where to get client id and secret key](#where-to-get-client-id-and-secret-key)
 - [How to build](#How-to-build)
