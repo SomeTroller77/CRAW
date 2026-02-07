@@ -2,7 +2,29 @@
 <p align="center">
   <img src="assets/logo.png" width="500">
 </p>
+<p align="center">
+  <img src="https://img.shields.io/github/license/SomeTroller77/CRAW" />
+  <img src="https://img.shields.io/github/issues/SomeTroller77/CRAW" />
+  <img src="https://img.shields.io/github/issues-pr/SomeTroller77/CRAW" />
+  <img src="https://img.shields.io/github/last-commit/SomeTroller77/CRAW" />
+</p>
 
+<p align="center">
+  <img src="https://img.shields.io/github/repo-size/SomeTroller77/CRAW" />
+  <img src="https://img.shields.io/github/languages/top/SomeTroller77/CRAW" />
+  <img src="https://img.shields.io/github/commit-activity/m/SomeTroller77/CRAW" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/github/stars/SomeTroller77/CRAW?style=social" />
+  <img src="https://img.shields.io/github/forks/SomeTroller77/CRAW?style=social" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Reddit-API-orange?logo=reddit" />
+  <img src="https://img.shields.io/badge/Language-C-blue?logo=c" />
+  <img src="https://img.shields.io/badge/Build-CMake-blue?logo=cmake" />
+</p>
 [GitHub repo size](https://img.shields.io/github/repo-size/SomeTroller77/CRAW)
 
 CRAW is a Reddit API Wrapper that is being developed in C to scrape data from reddit and make bots in C.
