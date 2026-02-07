@@ -77,6 +77,8 @@ CRAWcode CRAW_Subreddit_getInfo(CRAW *handle, CRAW_Subreddit *subreddit,char *su
             fprintf(stderr, "Error before: %s\n", error_ptr);
             fflush(stderr);
         }
+        free(suburl);
+        return CRAW_PARSE_ERROR;
     }
     // grabbing the main "data" object
     data = cJSON_GetObjectItemCaseSensitive(root, "data");
@@ -204,20 +206,21 @@ CRAWcode CRAW_Subreddit_getInfo(CRAW *handle, CRAW_Subreddit *subreddit,char *su
         printf("subreddit_type not found");
     }
     // comparing the value of the subreddit_type field and storing it in the form of enum CRAW_SUBREDDIT_TYPE (see CRAW.h for more info)
-    if(strcmp(subreddit_type->valuestring, "public")){
+    if(strcmp(subreddit_type->valuestring, "public") == 0){
         subreddit->subreddit_type = CRAW_SUBREDDIT_PUBLIC;
-    }else if(strcmp(subreddit_type->valuestring, "private")){
+    }else if(strcmp(subreddit_type->valuestring, "private" ) == 0){
         subreddit->subreddit_type = CRAW_SUBREDDIT_PRIVATE;
-    }else if(strcmp(subreddit_type->valuestring, "restricted")){
+    }else if(strcmp(subreddit_type->valuestring, "restricted") == 0){
         subreddit->subreddit_type = CRAW_SUBREDDIT_RESTRICTED;
-    }else if(strcmp(subreddit_type->valuestring, "gold_restricted")){
+    }else if(strcmp(subreddit_type->valuestring, "gold_restricted") == 0){
         subreddit->subreddit_type = CRAW_SUBREDDIT_GOLD_RESTRICTED;
-    }else if(strcmp(subreddit_type->valuestring, "archived")){
+    }else if(strcmp(subreddit_type->valuestring, "archived") == 0){
         subreddit->subreddit_type = CRAW_SUBREDDIT_ARCHIVED;
     }
     // freeing the memory
     cJSON_Delete(root);
     free(json);
+    free(suburl);
     return CRAW_OK;
 }
 

@@ -76,19 +76,19 @@ char *getData(CRAW *handle, const char *url){
     struct memory chunk={0};
 	struct curl_slist *list=NULL;
 	if(handle->internal->ratelimit_remaining == 0){
-		while(handle->internal->ratelimit_reset != 0){
-				fprintf(stdout, "\nRatelimit usage has depleted. Waiting for %d seconds", handle->internal->ratelimit_reset);
-				SLEEP(1);
-				handle->internal->ratelimit_reset--;
-			}
-        }
-		int len = strlen("https://oauth.reddit.com") + strlen(url) + 1;
-		char *fullurl = malloc(len);
-		snprintf(fullurl, len, "https://oauth.reddit.com%s", url);
-        curl_easy_setopt(curlhandle, CURLOPT_URL, fullurl);
-        curl_easy_setopt(curlhandle, CURLOPT_WRITEFUNCTION, cb);
-        curl_easy_setopt(curlhandle, CURLOPT_WRITEDATA, (void *)&chunk);
-        curl_easy_setopt(curlhandle, CURLOPT_USERAGENT, handle->user_agent);
+	while(handle->internal->ratelimit_reset != 0){
+			fprintf(stdout, "\nRatelimit usage has depleted. Waiting for %d seconds", handle->internal->ratelimit_reset);
+			SLEEP(1);
+			handle->internal->ratelimit_reset--;
+		}
+	}
+	int len = strlen("https://oauth.reddit.com") + strlen(url) + 1;
+	char *fullurl = malloc(len);
+	snprintf(fullurl, len, "https://oauth.reddit.com%s", url);
+	curl_easy_setopt(curlhandle, CURLOPT_URL, fullurl);
+	curl_easy_setopt(curlhandle, CURLOPT_WRITEFUNCTION, cb);
+	curl_easy_setopt(curlhandle, CURLOPT_WRITEDATA, (void *)&chunk);
+	curl_easy_setopt(curlhandle, CURLOPT_USERAGENT, handle->user_agent);
 	list=curl_slist_append(list, handle->internal->token_header);
 	curl_easy_setopt(curlhandle, CURLOPT_HTTPHEADER, list);
 	curl_easy_setopt(curlhandle, CURLOPT_HEADERFUNCTION, hdf);
@@ -108,8 +108,8 @@ char *getData(CRAW *handle, const char *url){
 	int tempint;
 	char temp[256];
 	while(current != NULL && current->header!=NULL){
-		if(sscanf(current->header, "%[^:]: %d", temp, &tempint) == -1){
-			return chunk.response;
+		if(sscanf(current->header, "%[^:]: %d", temp, &tempint) == -1 || current == NULL){
+			break;
 		}
 		if(strcmp(temp, "x-ratelimit-remaining") == 0){
 			handle->internal->ratelimit_remaining=tempint;
@@ -120,19 +120,16 @@ char *getData(CRAW *handle, const char *url){
 		if(strcmp(temp, "x-ratelimit-used") == 0){
 			handle->internal->ratelimit_used= tempint;
 		}
-		if(current->i == NULL){
-			return chunk.response;
-		}
-		else{
-			current=current->i;
-		}
+		current=current->i;
 	}
-    	while (current != NULL) {
-        	struct linked_list *temp = current;
-        	current = current->i;
-        	free(temp->header);
-       		free(temp);
-    	}
+	free(test.header);
+	current = test.i;
+	while (current != NULL) {
+		struct linked_list *temp = current;
+		current = current->i;
+		free(temp->header);
+		free(temp);
+	}
 	free(fullurl);
 	return chunk.response;
 }
