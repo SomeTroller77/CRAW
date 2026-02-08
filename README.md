@@ -46,8 +46,8 @@ It is designed to help developers fetch Reddit data and build bots using pure C,
 	- [Account](#craw_account-1)
 	- [Subreddit](#craw_subreddit-1)
 - [List of enums](#enums)
-	-[CRAW_Subreddit_type](#craw_subreddit_type)
-	-[CRAW_Vote](#craw_vote)
+	- [CRAW_Subreddit_type](#craw_subreddit_type)
+	- [CRAW_Vote](#craw_vote)
 	- [CRAWcode](#crawcode)
 - [Basic example](#Basic-example)
 
@@ -168,9 +168,9 @@ Functions implemented:-
 | ----------- | -------------------- | ----------- |
 | `CRAW_Subreddit *` | `CRAW_Subreddit_Init` | returns the pointer of a CRAW_Subreddit struct |
 | `CRAWcode` | `CRAW_Subreddit_GetInfo(CRAW *handle, CRAW_Subreddit *subreddit, char *subreddit_name)` | inputs the information of a subreddit into the pointer subreddit |
-| ` CRAWcode` | `CRAW_Subreddit_getHotPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name) | get the hot posts in a subreddit (default 25, option to customize will be implemented soon) |
-| ` CRAWcode` | `CRAW_Subreddit_getNewPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name) | get the new posts in a subreddit (default 25, option to customize will be implemented soon) |
-| ` CRAWcode` | `CRAW_Subreddit_getRisingPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name) | get the rising posts in a subreddit (default 25, option to customize will be implemented soon) |
+| ` CRAWcode` | `CRAW_Subreddit_getHotPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name)` | get the hot posts in a subreddit (default 25, option to customize will be implemented soon) |
+| ` CRAWcode` | `CRAW_Subreddit_getNewPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name)` | get the new posts in a subreddit (default 25, option to customize will be implemented soon) |
+| ` CRAWcode` | `CRAW_Subreddit_getRisingPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name)` | get the rising posts in a subreddit (default 25, option to customize will be implemented soon) |
 | `void` | `CRAW_Subreddit_Free(CRAW_Subreddit *ptr)` | frees the pointer ptr safely |
 
 
