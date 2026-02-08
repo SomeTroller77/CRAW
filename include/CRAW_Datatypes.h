@@ -20,63 +20,20 @@ TO NOT WORK
 YOU HAVE BEEN WARNED
 */
 
-#ifndef CRAW_MAIN_H
-#define CRAW_MAIN_H
-#include <curl/curl.h>
-#include "CRAW_Listing.h"
-// The base struct, the daddy of all the functions, ohhhh yeahhhh
-typedef struct CRAW_Reddit_Bot{
-	const char *client_id;
-	const char *secret_key;
-	const char *username;
-	const char *password;
-	const char *user_agent;
-	// the struct which stores info about the last request aswell as tracks the info of ratelimiting
-	struct internalInfo{
-		const char *token_header;
-		long error_code;
-		int ratelimit_remaining;
-		int ratelimit_reset;
-		int ratelimit_used;
-		CURLcode last_request_status;
-	} *internal;
-} CRAW;
 
-// CRAW_error_codes for checking the result of a task and for debugging purposes
+#ifndef CRAW_TYPES_H
+#define CRAW_TYPES_H
+
 typedef enum {
-	CRAW_OK,
-	CRAW_PARSE_ERROR,
-	CRAW_TOKEN_ERROR,
-	CRAW_GRAB_ERROR,
-	CRAW_BAD_REQUEST,
-	CRAW_NOT_FOUND,
-	CRAW_UNAUTHORISED,
-	CRAW_FORBIDDEN,
-	CRAW_TOO_MANY_REQUESTS,
-	CRAW_UNKNOWN_CODE
-} CRAWcode;
+    CRAW_COMMENT,
+    CRAW_ACCOUNT,
+    CRAW_LINK,
+    CRAW_MESSAGE,
+    CRAW_SUBREDDIT,
+    CRAW_AWARD,
+    CRAW_UNKNOWN_DATATYPE
+} CRAW_Datatype;
 
-// enum to interpret the type of a subreddit
-typedef enum {
-	CRAW_SUBREDDIT_PUBLIC,
-	CRAW_SUBREDDIT_PRIVATE,
-	CRAW_SUBREDDIT_RESTRICTED,
-	CRAW_SUBREDDIT_GOLD_RESTRICTED,
-	CRAW_SUBREDDIT_ARCHIVED
-} CRAW_Subreddit_type;
 
-typedef enum{
-	CRAW_UPVOTED,
-	CRAW_DOWNVOTED,
-	CRAW_NO_VOTE
-} CRAW_Vote;
-
-// the init function for the handle of the bot, must be run to be able to use other functions
-CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *username, const char *password, const char *user_agent);
-CRAWcode CRAW_getTopPosts(CRAW *handle, CRAW_Listing *list);
-CRAWcode CRAW_getNewPosts(CRAW *handle, CRAW_Listing *list);
-CRAWcode CRAW_getRisingPosts(CRAW *handle, CRAW_Listing *list);
-// the function to safely free the handle of a bot
-void CRAW_Free(CRAW *handle);
 
 #endif

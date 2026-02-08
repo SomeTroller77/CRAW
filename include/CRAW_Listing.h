@@ -21,8 +21,7 @@ YOU HAVE BEEN WARNED
 
 #ifndef CRAW_LISTING_H
 #define CRAW_LISTING_H
-#include "CRAW_Main.h"
-
+#include "./CRAW_Datatypes.h"
 // struct to make dynamic datatype actually fucking work for reddit listings
 typedef struct {
     CRAW_Datatype type;

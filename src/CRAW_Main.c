@@ -98,7 +98,101 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
 	free(chunk.response); // Free the memory
 	return handle;
 }
+CRAWcode CRAW_getTopPosts(CRAW *handle, CRAW_Listing *list){
+    // sending the fucking request
+    char *json = getData(handle, "/top");
+   
+    const cJSON *data = NULL;
+    
+    // parsing the received json
+    cJSON *root = cJSON_Parse(json);
+    // ptr safety
+    if(root == NULL){
+        const char *error_ptr = cJSON_GetErrorPtr();
+        if (error_ptr != NULL){
+            fprintf(stderr, "Error before: %s\n", error_ptr);
+            fflush(stderr);
+        }
+        return CRAW_PARSE_ERROR;
+    }
+    // grabbing the main "data" object
+    data = cJSON_GetObjectItemCaseSensitive(root, "data");
+    if(data == NULL){
+        #ifdef CRAW_DEBUG_MODE
+        printf("Data is empty");
+        #endif
+        return CRAW_PARSE_ERROR;
+    }
+    CRAW_load_listing(data, list);
+    // freeing the memory
+    cJSON_Delete(root);
+    free(json);
+    return CRAW_OK;
+}
 
+CRAWcode CRAW_getNewPosts(CRAW *handle, CRAW_Listing *list){
+    // sending the fucking request
+    char *json = getData(handle, "/new");
+   
+    const cJSON *data = NULL;
+    
+    // parsing the received json
+    cJSON *root = cJSON_Parse(json);
+    // ptr safety
+    if(root == NULL){
+        const char *error_ptr = cJSON_GetErrorPtr();
+        if (error_ptr != NULL){
+            fprintf(stderr, "Error before: %s\n", error_ptr);
+            fflush(stderr);
+        }
+        return CRAW_PARSE_ERROR;
+    }
+    // grabbing the main "data" object
+    data = cJSON_GetObjectItemCaseSensitive(root, "data");
+    if(data == NULL){
+        #ifdef CRAW_DEBUG_MODE
+        printf("Data is empty");
+        #endif
+        return CRAW_PARSE_ERROR;
+    }
+    CRAW_load_listing(data, list);
+    // freeing the memory
+    cJSON_Delete(root);
+    free(json);
+    return CRAW_OK;
+}
+
+CRAWcode CRAW_getRisingPosts(CRAW *handle, CRAW_Listing *list){
+    // sending the fucking request
+    char *json = getData(handle, "/rising");
+   
+    const cJSON *data = NULL;
+    
+    // parsing the received json
+    cJSON *root = cJSON_Parse(json);
+    // ptr safety
+    if(root == NULL){
+        const char *error_ptr = cJSON_GetErrorPtr();
+        if (error_ptr != NULL){
+            fprintf(stderr, "Error before: %s\n", error_ptr);
+            fflush(stderr);
+        }
+        return CRAW_PARSE_ERROR;
+    }
+    // grabbing the main "data" object
+    data = cJSON_GetObjectItemCaseSensitive(root, "data");
+    if(data == NULL){
+        #ifdef CRAW_DEBUG_MODE
+        printf("Data is empty");
+        #endif
+        return CRAW_PARSE_ERROR;
+    }
+    CRAW_load_listing(data, list);
+    // freeing the memory
+    cJSON_Delete(root);
+    free(json);
+    return CRAW_OK;
+}
 // just a random ass free function i thought would be useful
 // To be used when CRAW is not needed, or at the end of the program
 void CRAW_Free(CRAW *handle){

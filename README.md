@@ -161,6 +161,9 @@ Functions implemented:-
 | `CRAW_Account *` | `CRAW_Account_Init()` | Returns a pointer to a CRAW_Account struct which can be used to store an account data, returns NULL if your out of memory |
 | `CRAWcode` | `CRAW_Account_me(CRAW *handle, CRAW_Account * accHandle)` | Returns a CRAW code and writes the data of logged in account to passed accHandle |
 | `CRAWcode` | `CRAW_Account_getAbout(CRAW *handle, char *username, CRAW_Account *accHandle)` | Returns a CRAWcode and writes the provided data from api to the passed accHandle |
+| ` CRAWcode` | `CRAW_getHotPosts(CRAW *handle, CRAW_Listing *list)` | get the hot posts from the logged-in user's feed (default 25, option to customize will be implemented soon) |
+| ` CRAWcode` | `CRAW_getNewPosts(CRAW *handle, CRAW_Listing *list)` | get the new posts from the logged-in user's feed (default 25, option to customize will be implemented soon) |
+| ` CRAWcode` | `CRAW_getRisingPosts(CRAW *handle, CRAW_Listing *list` | get the rising posts from the logged-in user's feed (default 25, option to customize will be implemented soon) |
 | `void` | `CRAW_Account_Free(CRAW_Account *accHandle)` | frees the passed pointer (Must be run on all the CRAW_Account variables initialised using `CRAW_Account_Init()` ) |
 
 ### CRAW_Subreddit
