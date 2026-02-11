@@ -256,6 +256,14 @@ int main(){
 	return 0;
 }
 ```
+## TO DOs
+For the developers looking to contribute towards the project, i have a TO DO list which you could follow and would help me a lot :D
+- [ ] Implement CRAW_Revoke_AccessToken()
+- [ ] Implement CRAW_Refresh_AccessToken()
+- [ ] Implement ratelimit handler
+- [ ] Implement postData() to be utilized in endpoints like creating a post or composing a message
+- [ ] Implement Reddit messages and its endpoints
+- [ ] Implement CRAW_createPost()
 
 ## Note
 
