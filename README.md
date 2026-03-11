@@ -56,6 +56,7 @@ It is designed to help developers fetch Reddit data and build bots using pure C,
 
 If you want to use this Wrapper, you need a reddit client id and secret key which you can get by going [here](https://reddit.com/prefs/apps) and logging in with your credentials
 
+NOTE:- Non OAuth endpoints have been implemented aswell, so the library can also be used without an API key
 ## How to build?
 The project has a dependency of libcurl, it can be installed in linux by
 
@@ -152,8 +153,8 @@ Functions implemented:-
 ### CRAW_Main
 | Return type | Function declaration | Description |
 | ----------- | -------------------- | ----------- |
-| `CRAW *`    | `CRAW_Init("Client id", "secret_key", "username", "password", "user_agent")` | Returns a pointer to the struct CRAW, returns NULL if the servers are down or any arguments are wrong |
-| `void` | `CRAW_free(CRAW *handle` | frees the pointer initialised using `CRAW_Init()` |
+| `CRAW *`    | `CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *username, const char *password, const char *user_agent, bool is_oauth)` | Returns a pointer to the struct CRAW, returns NULL if the servers are down or any arguments are wrong, putting false as the argument for is_oauth will result in other arguments getting ignored as it initializes a non OAuth handle |
+| `void` | `CRAW_free(CRAW *handle)` | frees the pointer initialised using `CRAW_Init()` |
 
 ### CRAW_Account 
 | Return type | Function declaration | Description |
