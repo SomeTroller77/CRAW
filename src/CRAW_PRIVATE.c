@@ -454,7 +454,7 @@ void CRAW_load_link(const cJSON *data, CRAW_Link *ptr){
 		#ifdef CRAW_DEBUG_MODE
 		printf("domain not found");
 		#endif
-	}{
+	}else{
 		ptr->domain = strdup(domain->valuestring);
 	}
 	hidden = cJSON_GetObjectItemCaseSensitive(data, "hidden");
@@ -669,6 +669,16 @@ void CRAW_load_listing(cJSON *data, CRAW_Listing *listing){
 			}
 			CRAW_load_link(obj, listing->children[i].data);
 		}else if(strcmp(prefix->valuestring, "t4") == 0){
+			const cJSON *obj = NULL;
+			listing->children[i].type = CRAW_MESSAGE;
+			listing->children[i].data = calloc(1, sizeof(CRAW_Message));
+			obj = cJSON_GetObjectItemCaseSensitive(child, "data");
+			if(!cJSON_IsObject(obj)){
+				#ifdef CRAW_DEBUG_MODE
+				printf("data not found");
+				#endif
+			}
+			CRAW_load_message(obj, listing->children[i].data);
 
 		}else if(strcmp(prefix->valuestring, "t5") == 0){
 			const cJSON *obj = NULL;
@@ -687,6 +697,38 @@ void CRAW_load_listing(cJSON *data, CRAW_Listing *listing){
 	}
 }
 
+void CRAW_load_message(const cJSON *data, CRAW_Message *ptr){
+	const cJSON *author = NULL;
+	const cJSON *body = NULL;
+	const cJSON *context = NULL;
+	const cJSON *first_message = NULL;
+	const cJSON *first_message_name = NULL;
+	const cJSON *likes = NULL;
+	const cJSON *link_title = NULL;
+	const cJSON *name = NULL;
+	const cJSON *parent_id = NULL;
+	const cJSON *replies = NULL;
+	const cJSON *subject = NULL;
+	const cJSON *subreddit = NULL;
+	const cJSON *was_comment = NULL;
+	author = cJSON_GetObjectItemCaseSensitive(data, "author");
+	if(!cJSON_IsString(author) || author->valuestring == NULL){
+		#ifdef CRAW_DEBUG_MODE
+		printf("author not found");
+		#endif
+	}else{
+		ptr->author = strdup(author->valuestring);
+	}
+	body = cJSON_GetObjectItemCaseSensitive(data, "body");
+	if(!cJSON_IsString(author) || author->valuestring == NULL){
+		#ifdef CRAW_DEBUG_MODE
+		printf("author not found");
+		#endif
+	}else{
+		ptr->author = strdup(author->valuestring);
+	}
+
+}
 /*
 please do not kill me for this shitty code im just 16 UwU 
 */

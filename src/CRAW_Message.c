@@ -34,3 +34,7 @@ YOU HAVE BEEN WARNED
 CRAW_Message *CRAW_Message_Init(){
     return malloc(sizeof(CRAW_Message));
 }
+
+void CRAW_Message_free(CRAW_Message *handle){
+    free(handle);
+}

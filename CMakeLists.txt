@@ -27,3 +27,6 @@ install(DIRECTORY include/
     DESTINATION include/CRAW
     FILES_MATCHING PATTERN "*.h"
 )
+
+add_executable(test examples/getTopPosts.c)
+target_link_libraries(test CRAW curl)

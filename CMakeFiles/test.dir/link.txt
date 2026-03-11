@@ -1,0 +1,1 @@
+/usr/bin/gcc CMakeFiles/test.dir/examples/getTopPosts.c.o -o test  -Wl,-rpath,/home/sakshamvitwekar/CRAW libCRAW.so -lcurl /usr/lib/x86_64-linux-gnu/libcurl.so 
