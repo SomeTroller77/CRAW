@@ -13,6 +13,7 @@
   <img src="https://img.shields.io/github/repo-size/SomeTroller77/CRAW" />
   <img src="https://img.shields.io/github/languages/top/SomeTroller77/CRAW" />
   <img src="https://img.shields.io/github/commit-activity/m/SomeTroller77/CRAW" />
+  <img src="https://github.com/SomeTroller77/CRAW/actions/workflows/build.yml/badge.svg" />
 </p>
 
 <p align="center">
@@ -25,7 +26,6 @@
   <img src="https://img.shields.io/badge/Language-C-blue?logo=c" />
   <img src="https://img.shields.io/badge/Build-CMake-blue?logo=cmake" />
 </p>
-![CI](https://github.com/SomeTroller77/CRAW/actions/workflows/build.yml/badge.svg)
 
 ## 📌 About
 
