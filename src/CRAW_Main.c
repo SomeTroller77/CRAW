@@ -33,7 +33,7 @@ YOU HAVE BEEN WARNED
 
 // The initialization function which is takes the parameters given and loads in the access token and other things from the endpoint 
 
-CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *username, const char *password, const char *user_agent){
+CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *username, const char *password, const char *user_agent, bool is_oauth){
 	// initializing the memory struct for libcurl
 	struct memory chunk={0};
 	// allocating memory for the struct CRAW which is the base for all the requests to be sent and utilized by other functions
@@ -42,68 +42,75 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
 		return NULL; //memory check
 	}
 	// allocating memory for the member pointer which holds all the important data like access_token
-	// this line was the culprit for causing segmentation fault and core dumping and was fixed after 3 years (commit id 6bd780576da45303ed25b7ed906f3c6b59e7d352)
-	handle->internal=(struct internalInfo *)calloc(1, (sizeof(*handle->internal)));
-	if(handle->internal == NULL){
-		return NULL;
-	}
-	// loading in the parameters in handle for furthur use
-	handle->client_id=client_id;
-	handle->secret_key=secret_key;
-	handle->username=username;
-	handle->password=password;
-	handle->user_agent=user_agent;
-	handle->internal->token_header=NULL;
-	handle->internal->ratelimit_remaining=1;
-	// preparing the base string and the post string to be used as data for reddit oauth endpoint
-	char *baseString="grant_type=password&username=&password=";
-	char *postString=(char *) malloc(strlen(handle->username)+strlen(handle->password)+strlen(baseString)+1);
-	sprintf(postString, "grant_type=password&username=%s&password=%s", handle->username, handle->password);
-	CURL *curlhandle=curl_easy_init();
-	if(!curlhandle){
-		return NULL;
-	}
-	CURLcode res;
-	chunk.response=NULL;
-	// setting curl parameters
-	curl_easy_setopt(curlhandle, CURLOPT_URL, "https://www.reddit.com/api/v1/access_token");
-	curl_easy_setopt(curlhandle, CURLOPT_USERNAME, handle->client_id);
-	curl_easy_setopt(curlhandle, CURLOPT_PASSWORD, handle->secret_key);
-	curl_easy_setopt(curlhandle, CURLOPT_WRITEFUNCTION, cb);
-	curl_easy_setopt(curlhandle, CURLOPT_WRITEDATA, (void *)&chunk);
-	curl_easy_setopt(curlhandle, CURLOPT_USERAGENT, handle->user_agent);
-	curl_easy_setopt(curlhandle, CURLOPT_POSTFIELDS, postString);
-	// sending the request
-	res=curl_easy_perform(curlhandle);
-	if(chunk.response == NULL){
-		return NULL;
-	}
-	// storing the HTTP response code
-	curl_easy_getinfo(curlhandle, CURLINFO_RESPONSE_CODE, &handle->internal->error_code);
-	// initializing cJSON
-	const cJSON *access_tokenBuf=NULL;
-	cJSON *monitor_json=cJSON_Parse(chunk.response);
-	access_tokenBuf=cJSON_GetObjectItemCaseSensitive(monitor_json, "access_token");
-	if(access_tokenBuf == NULL){
-		return NULL;
-	}
-	handle->internal->token_header=(char*) malloc(strlen("Authorization: bearer ")+strlen(access_tokenBuf->valuestring)+1);
-	// copying and concatenating token in the auth header format for furthur use
-	strcpy((char*)handle->internal->token_header, "Authorization: bearer ");
-	strcat((char*)handle->internal->token_header, access_tokenBuf->valuestring);
-	// cleaning memory
-	cJSON_Delete(monitor_json);
-	curl_easy_cleanup(curlhandle);
-	free(postString);
-	free(chunk.response); // Free the memory
+	// this line was the culprit for causing segmentation fault and core dumping and was fixed after 3 years (commit id: 6bd780576da45303ed25b7ed906f3c6b59e7d352)
+
+    if(is_oauth){
+        handle->internal=(struct internalInfo *)calloc(1, (sizeof(*handle->internal)));
+        if(handle->internal == NULL){
+            return NULL;
+        }
+        // loading in the parameters in handle for furthur use
+        handle->client_id=client_id;
+        handle->secret_key=secret_key;
+        handle->username=username;
+        handle->password=password;
+        handle->user_agent=user_agent;
+        handle->internal->token_header=NULL;
+        handle->internal->ratelimit_remaining=1;
+        // preparing the base string and the post string to be used as data for reddit oauth endpoint
+        char *baseString="grant_type=password&username=&password=";
+        char *postString=(char *) malloc(strlen(handle->username)+strlen(handle->password)+strlen(baseString)+1);
+        sprintf(postString, "grant_type=password&username=%s&password=%s", handle->username, handle->password);
+        curl_global_init(CURL_GLOBAL_DEFAULT);
+        CURL *curlhandle=curl_easy_init();
+        if(!curlhandle){
+            return NULL;
+        }
+        CURLcode res;
+        chunk.response=NULL;
+        // setting curl parameters
+        curl_easy_setopt(curlhandle, CURLOPT_URL, "https://www.reddit.com/api/v1/access_token");
+        curl_easy_setopt(curlhandle, CURLOPT_USERNAME, handle->client_id);
+        curl_easy_setopt(curlhandle, CURLOPT_PASSWORD, handle->secret_key);
+        curl_easy_setopt(curlhandle, CURLOPT_WRITEFUNCTION, cb);
+        curl_easy_setopt(curlhandle, CURLOPT_WRITEDATA, (void *)&chunk);
+        curl_easy_setopt(curlhandle, CURLOPT_USERAGENT, handle->user_agent);
+        curl_easy_setopt(curlhandle, CURLOPT_POSTFIELDS, postString);
+        // sending the request
+        res=curl_easy_perform(curlhandle);
+        if(chunk.response == NULL){
+            return NULL;
+        }
+        // storing the HTTP response code
+        curl_easy_getinfo(curlhandle, CURLINFO_RESPONSE_CODE, &handle->internal->error_code);
+        // initializing cJSON
+        const cJSON *access_tokenBuf=NULL;
+        cJSON *monitor_json=cJSON_Parse(chunk.response);
+        access_tokenBuf=cJSON_GetObjectItemCaseSensitive(monitor_json, "access_token");
+        if(access_tokenBuf == NULL){
+            return NULL;
+        }
+        handle->internal->token_header=(char*) malloc(strlen("Authorization: bearer ")+strlen(access_tokenBuf->valuestring)+1);
+        // copying and concatenating token in the auth header format for furthur use
+        strcpy((char*)handle->internal->token_header, "Authorization: bearer ");
+        strcat((char*)handle->internal->token_header, access_tokenBuf->valuestring);
+        // cleaning memory
+        cJSON_Delete(monitor_json);
+        curl_easy_cleanup(curlhandle);
+        curl_global_cleanup();
+        free(postString);
+        free(chunk.response); // Free the memory
+        handle->is_authenticated = true;
+    }else{
+        handle->user_agent = strdup(user_agent);   
+        handle->is_authenticated = false;
+    }
 	return handle;
 }
 CRAWcode CRAW_getTopPosts(CRAW *handle, CRAW_Listing *list){
     // sending the fucking request
     char *json = getData(handle, "/top");
-   
     const cJSON *data = NULL;
-    
     // parsing the received json
     cJSON *root = cJSON_Parse(json);
     // ptr safety
@@ -196,9 +203,15 @@ CRAWcode CRAW_getRisingPosts(CRAW *handle, CRAW_Listing *list){
 // just a random ass free function i thought would be useful
 // To be used when CRAW is not needed, or at the end of the program
 void CRAW_Free(CRAW *handle){
-	free(handle->internal->token_header);
-	free(handle->internal);
-	free(handle);
+
+	if(handle->is_authenticated){
+        (handle->internal->token_header);
+        free(handle->internal);
+    }else{
+        free(handle->user_agent);
+    }
+    free(handle);
+
 }
 
 
