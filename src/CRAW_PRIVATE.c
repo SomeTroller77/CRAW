@@ -143,6 +143,7 @@ char *getData(CRAW *handle, const char *url){
 		curl_easy_setopt(curlhandle, CURLOPT_WRITEFUNCTION, cb);
 		curl_easy_setopt(curlhandle, CURLOPT_WRITEDATA, (void *)&chunk);
 		curl_easy_setopt(curlhandle, CURLOPT_USERAGENT, handle->user_agent);
+		curl_easy_setopt(curlhandle, CURLOPT_FOLLOWLOCATION, 1L);
 		#ifdef DEBUG_MODE
 		curl_easy_setopt(curlhandle, CURLOPT_VERBOSE, 1L);
 		#endif
