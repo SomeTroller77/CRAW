@@ -1,8 +1,0 @@
-/home/sakshamvitwekar/CRAW/CMakeFiles/CRAW.dir
-/home/sakshamvitwekar/CRAW/CMakeFiles/test.dir
-/home/sakshamvitwekar/CRAW/CMakeFiles/edit_cache.dir
-/home/sakshamvitwekar/CRAW/CMakeFiles/rebuild_cache.dir
-/home/sakshamvitwekar/CRAW/CMakeFiles/list_install_components.dir
-/home/sakshamvitwekar/CRAW/CMakeFiles/install.dir
-/home/sakshamvitwekar/CRAW/CMakeFiles/install/local.dir
-/home/sakshamvitwekar/CRAW/CMakeFiles/install/strip.dir

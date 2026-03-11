@@ -25,6 +25,7 @@
   <img src="https://img.shields.io/badge/Language-C-blue?logo=c" />
   <img src="https://img.shields.io/badge/Build-CMake-blue?logo=cmake" />
 </p>
+![CI](https://github.com/SomeTroller77/CRAW/actions/workflows/build.yml/badge.svg)
 
 ## 📌 About
 
