@@ -1,9 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include<CRAW/CRAW.h>
+#include<CRAW.h>
 #include "../include/cJSON.h"
-#define CRAW_PRIVATE_DO_NOT_MESS
-#include<CRAW/CRAW_PRIVATE.h>
 int main(){
 	CRAW *handle=CRAW_Init(
 		NULL, 
