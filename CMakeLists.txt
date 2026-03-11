@@ -6,7 +6,7 @@ add_compile_options(-Wall -Wextra -Wpedantic -g)
 file(GLOB SRC_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c")
 add_library(${PROJECT_NAME} SHARED ${SRC_FILES})
 
-target_include_directories(${PROJECT_NAME} PRIVATE include)
+target_include_directories(${PROJECT_NAME} PUBLIC include)
 
 find_package(CURL REQUIRED)
 if(CURL_FOUND)
