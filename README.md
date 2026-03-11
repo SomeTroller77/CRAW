@@ -232,33 +232,7 @@ If you still get any on the CRAWcode after following the instructions, then you 
 
 Heres a basic example on how you could use it right now
 
-```
-#include<stdio.h>
-#include<CRAW/CRAW_Main.h>
-
-int main(){
-	// initializing the handler (logging into the oauth api)
-	CRAW *handle=CRAW_Init("Your client id", "Your secret key", "Your reddit username", "Your reddit password", "Your user agent");
-	if(handle == NULL){
-		return 1;
-	}
-	CRAWcode res;
-	CRAW_Account *myInfo=CRAW_Account_Init();
-	res=CRAW_Account_me(handle, myInfo); // getting the info of the logged-in account
-	if(res != CRAW_OK){
-		return 2;
-	}
-	printf("My Name: %s", myInfo->name);
-	CRAW_Listing *a = CRAW_Listing_Init();
-	CRAW_Subreddit_getNewPosts(handle, a, "hacking");
-	CRAW_Link *test = a->children[2].data; // MANDATORY TO CAST THE void * POINTER TO A VALID CRAW_Datatype
-	printf("\n\n\n%s\nTotal posts:- %d", test->permalink, a->array_size);
-	CRAW_Listing_Free(a);
-	CRAW_Account_Free(myInfo);
-	CRAW_Free(handle);
-	return 0;
-}
-```
+navigate to ```examples/``` to see examples
 ## TO DOs
 For the developers looking to contribute towards the project, i have a TO DO list which you could follow and would help me a lot :D
 - [ ] Implement CRAW_Revoke_AccessToken()
@@ -269,6 +243,7 @@ For the developers looking to contribute towards the project, i have a TO DO lis
 - [ ] Implement CRAW_createPost()
 
 ## Note
+Note:- Ignore the CI pipeline for now as it seems that reddit has blocked github's ip address which is leading to the return of HTML instead of JSON
 
 This project is not well made as i am still developing it, it might take some time but i will try to make it a good project, issues are welcome
 
