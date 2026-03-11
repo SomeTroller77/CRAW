@@ -91,6 +91,7 @@ CRAW uses struct to store the data. heres the table of the structs in C
 | `CRAW_Account` | It stores the account data which is sent by the reddit API |
 | `CRAW_Subreddit` | It stores the data of subreddit which is sent by the reddit API |
 | `CRAW_Messages` | It stores the data of a message/comment which is sent by the reddit API |
+| `CRAW_Links` | It is a list of many data structures together, basically like an array |
 
 ### CRAW_Account
 
