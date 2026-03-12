@@ -28,4 +28,4 @@ jobs:
 
     - name: Run valgrind
       run: |
-        valgrind --leak-check=full ./test || true
+        valgrind --leak-check=full ./CRAW_Test_1 || true
