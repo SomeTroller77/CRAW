@@ -125,6 +125,22 @@ here are some stuff which is stored and usable in CRAW_Account struct pointer
 | `bool` | `is_user_moderator` | whether the logged-in user is a moderator of the subreddit |
 | `bool` | `is_user_subscriber` | whether the logged-in user is subscribed to the subreddit |
 
+### CRAW_Message
+| Data Type | Field | Description |
+| --------- | ----- | ----------- |
+| `char *` | `author` | username of the author |
+| `char *` | `body` | the message itself |
+| `char *` | `context` | if the message is a comment, then the permalink to the comment with ?context=3 appended to the end, otherwise an empty string |
+| `char *` | `first_message` | either null or the first message's ID represented as base 10 |
+| `char *` | `first_message_name` | either null or the first message's fullname |
+| `bool` | `likes` | how the logged-in user has voted on the message - True = upvoted, False = downvoted, null = no vote |
+| `char *` | `link_title` | if the message is actually a comment, contains the title of the thread it was posted in |
+| `char *`| `name` | ex: "t4_8xwlg" |
+| `char *` | `parent_id` | null if no parent is attached |
+| `char *` | `replies` | Again, an empty string if there are no replies. |
+| `char *` | `subject` | subject of message |
+| `char *` | `subreddit` | null if not a comment. |
+
 ### CRAW_Links
 | Data Type | Field | Description |
 | --------- | ----- | ----------- |
@@ -147,6 +163,18 @@ here are some stuff which is stored and usable in CRAW_Account struct pointer
 | `char *` | `url`| the url of the post |
 | `long` | `edited` | the UNIX Timestamp when the post was edited, null when not edited |
 | `bool` | `is_stickied` | whether the post has been stickied in a subreddit |
+
+### CRAW_Listing 
+| Data Type | Field | Description |
+| `char *` | `after` | gives the id of the next listing |
+| `int` | `array_size` | stores the size/length of the array |
+| `CRAW_children *` | `children` | array of CRAW Data structures |
+
+### CRAW_children
+| Data Type | Field | Description |
+| `CRAW_Datatype` | `type` | stores the datatype of the array element |
+| `void *` | `data` | the pointer to the CRAW Data structure |
+
 
 ## Functions
 
@@ -179,6 +207,16 @@ Functions implemented:-
 | ` CRAWcode` | `CRAW_Subreddit_getRisingPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name)` | get the rising posts in a subreddit (default 25, option to customize will be implemented soon) |
 | `void` | `CRAW_Subreddit_Free(CRAW_Subreddit *ptr)` | frees the pointer ptr safely |
 
+### CRAW_Message
+| Return type | Function declaration | Description |
+| `CRAW_Message *` | `CRAW_Message_Init()` | Initializes the CRAW_Message struct |
+| `CRAWcode` | `CRAW_Message_getInbox(CRAW *handle, CRAW_Listing *ptr)` | Gets the logged-in users inbox |
+| `void` | `CRAW_Message_free(CRAW_Message *handle)` | Frees the CRAW_Message pointer |
+
+### CRAW_Listing
+| Return type | Function declaration | Description |
+| `CRAW_Listing *` | `CRAW_Listing_Init()` | initializes the CRAW_Listing struct |
+| `void` | `CRAW_Listing_Free(CRAW_Listing *ptr)` | Frees the CRAW_Listing struct |
 
 ## Enums 
 Enums make it easy for developers to be able to use conditions without needing to remember the int values of different entities
