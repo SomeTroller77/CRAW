@@ -238,8 +238,8 @@ For the developers looking to contribute towards the project, i have a TO DO lis
 - [ ] Implement CRAW_Revoke_AccessToken()
 - [ ] Implement CRAW_Refresh_AccessToken()
 - [ ] Implement ratelimit handler
-- [ ] Implement postData() to be utilized in endpoints like creating a post or composing a message
-- [ ] Implement Reddit messages and its endpoints
+- [X] Implement postData() to be utilized in endpoints like creating a post or composing a message
+- [X] Implement Reddit messages and start implementing its endpoints
 - [ ] Implement CRAW_createPost()
 
 ## Note

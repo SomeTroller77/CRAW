@@ -203,9 +203,8 @@ CRAWcode CRAW_getRisingPosts(CRAW *handle, CRAW_Listing *list){
 // just a random ass free function i thought would be useful
 // To be used when CRAW is not needed, or at the end of the program
 void CRAW_Free(CRAW *handle){
-
 	if(handle->is_authenticated){
-        (handle->internal->token_header);
+        free(handle->internal->token_header);
         free(handle->internal);
     }else{
         free(handle->user_agent);

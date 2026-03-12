@@ -58,6 +58,7 @@ CRAWcode check_http_code(long code);
 void CRAW_load_account(const cJSON *data, CRAW_Account *ptr);
 void CRAW_load_subreddit(const cJSON *data, CRAW_Subreddit *ptr);
 void CRAW_load_link(const cJSON *data, CRAW_Link *ptr);
+void CRAW_load_message(const cJSON *data, CRAW_Message *ptr);
 void CRAW_load_listing(cJSON *data, CRAW_Listing *listing);
 #else
 #error "Macro not defined"

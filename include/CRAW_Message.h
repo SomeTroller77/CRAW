@@ -41,4 +41,7 @@ typedef struct {
 	char *subreddit;
 	bool is_comment;
 } CRAW_Message;
+CRAW_Message *CRAW_Message_Init();
+CRAWcode CRAW_Message_getInbox(CRAW *handle, CRAW_Listing *ptr);
+void CRAW_Message_free(CRAW_Message *handle);
 #endif

@@ -66,7 +66,6 @@ size_t cb(void *buf, size_t size, size_t count, void *userp){
 	return realbytes;
 }
 char *getData(CRAW *handle, const char *url){
-	curl_global_init(CURL_GLOBAL_DEFAULT);
     CURL *curlhandle = curl_easy_init();
 	if(curlhandle == NULL){
 		printf("curl handle didnt init");
@@ -144,7 +143,7 @@ char *getData(CRAW *handle, const char *url){
 		curl_easy_setopt(curlhandle, CURLOPT_WRITEDATA, (void *)&chunk);
 		curl_easy_setopt(curlhandle, CURLOPT_USERAGENT, handle->user_agent);
 		curl_easy_setopt(curlhandle, CURLOPT_FOLLOWLOCATION, 1L);
-		#ifdef DEBUG_MODE
+		#ifdef CRAW_DEBUG_MODE
 		curl_easy_setopt(curlhandle, CURLOPT_VERBOSE, 1L);
 		#endif
 		res = curl_easy_perform(curlhandle);
@@ -154,9 +153,101 @@ char *getData(CRAW *handle, const char *url){
 		free(fullurl);
 	}
 	curl_easy_cleanup(curlhandle);
-	curl_global_cleanup();
 	return chunk.response;
 }
+char *postData(CRAW *handle, const char *url, const char *data){
+    CURL *curlhandle = curl_easy_init();
+	if(curlhandle == NULL){
+		printf("curl handle didnt init");
+		return;
+	}
+	CURLcode res;
+	struct memory chunk={0};
+	if(handle->is_authenticated){
+		handle->internal->error_code=0;
+		struct curl_slist *list=NULL;
+		if(handle->internal->ratelimit_remaining == 0){
+		while(handle->internal->ratelimit_reset != 0){
+				fprintf(stdout, "\nRatelimit usage has depleted. Waiting for %d seconds", handle->internal->ratelimit_reset);
+				SLEEP(1);
+				handle->internal->ratelimit_reset--;
+			}
+		}
+		int len = strlen("https://oauth.reddit.com") + strlen(url) + 1;
+		char *fullurl = malloc(len);
+		snprintf(fullurl, len, "https://oauth.reddit.com%s", url);
+		// setting the curl opts
+		curl_easy_setopt(curlhandle, CURLOPT_URL, fullurl);
+		curl_easy_setopt(curlhandle, CURLOPT_WRITEFUNCTION, cb);
+		curl_easy_setopt(curlhandle, CURLOPT_WRITEDATA, (void *)&chunk);
+		curl_easy_setopt(curlhandle, CURLOPT_USERAGENT, handle->user_agent);
+		list=curl_slist_append(list, handle->internal->token_header);
+		curl_easy_setopt(curlhandle, CURLOPT_HTTPHEADER, list);
+		curl_easy_setopt(curlhandle, CURLOPT_HEADERFUNCTION, hdf);
+		curl_easy_setopt(curlhandle, CURLOPT_POSTFIELDS, data);
+		struct linked_list test;
+		test.header=NULL;
+		test.i=NULL;
+		curl_easy_setopt(curlhandle, CURLOPT_HEADERDATA, &test);
+		res = curl_easy_perform(curlhandle);
+		if(res != CURLE_OK){
+			fprintf(stdout, "%s\n", curl_easy_strerror(res));
+		}
+		curl_easy_getinfo(curlhandle, CURLINFO_RESPONSE_CODE, &handle->internal->error_code);
+		curl_slist_free_all(list);
+		struct linked_list *current = &test;
+		current = test.i;
+		int tempint;
+		char temp[256];
+		// scanning for headers to take the ratelimit headers
+		while(current != NULL && current->header!=NULL){
+			if(sscanf(current->header, "%[^:]: %d", temp, &tempint) == -1 || current == NULL){
+				break;
+			}
+			if(strcmp(temp, "x-ratelimit-remaining") == 0){
+				handle->internal->ratelimit_remaining=tempint;
+			}
+			if(strcmp(temp, "x-ratelimit-reset") == 0){
+				handle->internal->ratelimit_reset=tempint;
+			}
+			if(strcmp(temp, "x-ratelimit-used") == 0){
+				handle->internal->ratelimit_used= tempint;
+			}
+			current=current->i;
+		}
+		free(test.header);
+		current = test.i;
+		// freeing the linked list nodes
+		while (current != NULL) {
+			struct linked_list *temp = current;
+			current = current->i;
+			free(temp->header);
+			free(temp);
+		}
+		free(fullurl);
+	}else{
+		int len = strlen("https://www.reddit.com") + strlen(url) + strlen("/.json") + 1;
+		char *fullurl = malloc(len);
+		snprintf(fullurl, len, "https://www.reddit.com%s/.json", url);
+		curl_easy_setopt(curlhandle, CURLOPT_URL, fullurl);
+		curl_easy_setopt(curlhandle, CURLOPT_WRITEFUNCTION, cb);
+		curl_easy_setopt(curlhandle, CURLOPT_WRITEDATA, (void *)&chunk);
+		curl_easy_setopt(curlhandle, CURLOPT_USERAGENT, handle->user_agent);
+		curl_easy_setopt(curlhandle, CURLOPT_FOLLOWLOCATION, 1L);
+		curl_easy_setopt(curlhandle, CURLOPT_POSTFIELDS, data);
+		#ifdef CRAW_DEBUG_MODE
+		curl_easy_setopt(curlhandle, CURLOPT_VERBOSE, 1L);
+		#endif
+		res = curl_easy_perform(curlhandle);
+		if(res != CURLE_OK){
+			fprintf(stdout, "%s\n", curl_easy_strerror(res));
+		}
+		free(fullurl);
+	}
+	curl_easy_cleanup(curlhandle);
+	return chunk.response;
+}
+
 CRAWcode check_http_code(long code){
 	if(code >= 200 && code <=399){
                 return CRAW_OK;
@@ -177,6 +268,8 @@ CRAWcode check_http_code(long code){
         return CRAW_UNKNOWN_CODE;
     }
 }
+
+// Loader functions to easily parse JSON and load values into struct pointer
 void CRAW_load_account(const cJSON *data, CRAW_Account *ptr){
 	const cJSON *name=NULL;
 	const cJSON *total_karma=NULL;
@@ -633,7 +726,7 @@ void CRAW_load_listing(cJSON *data, CRAW_Listing *listing){
 	int array_size = cJSON_GetArraySize(children);
 	listing->array_size = array_size;
 	// allocating memory for all the CRAW_children present
-	listing->children = malloc(sizeof(CRAW_children) * array_size);
+	listing->children = calloc(array_size, sizeof(CRAW_children));
 	int i = 0;
 	// iterating through the json array
 	cJSON_ArrayForEach(child, children){
@@ -713,7 +806,7 @@ void CRAW_load_message(const cJSON *data, CRAW_Message *ptr){
 	const cJSON *subreddit = NULL;
 	const cJSON *was_comment = NULL;
 	author = cJSON_GetObjectItemCaseSensitive(data, "author");
-	if(!cJSON_IsString(author) || author->valuestring == NULL){
+	if(!cJSON_IsString(author) || author == NULL ||author->valuestring == NULL){
 		#ifdef CRAW_DEBUG_MODE
 		printf("author not found");
 		#endif
@@ -721,14 +814,93 @@ void CRAW_load_message(const cJSON *data, CRAW_Message *ptr){
 		ptr->author = strdup(author->valuestring);
 	}
 	body = cJSON_GetObjectItemCaseSensitive(data, "body");
-	if(!cJSON_IsString(author) || author->valuestring == NULL){
+	if(!cJSON_IsString(author) || body == NULL||body->valuestring == NULL){
+		#ifdef CRAW_DEBUG_MODE
+		printf("body not found");
+		#endif
+	}else{
+		ptr->body = strdup(body->valuestring);
+	}
+	context = cJSON_GetObjectItemCaseSensitive(data, "context");
+	if(!cJSON_IsString(author) || context == NULL ||context->valuestring == NULL){
+		#ifdef CRAW_DEBUG_MODE
+		printf("context not found");
+		#endif
+	}else{
+		ptr->context = strdup(context->valuestring);
+	}
+	first_message = cJSON_GetObjectItemCaseSensitive(data, "first_message");
+	if(!cJSON_IsString(author) || first_message == NULL ||first_message->valuestring == NULL){
+		#ifdef CRAW_DEBUG_MODE
+		printf("first_message not found");
+		#endif
+	}else{
+		ptr->first_message = strdup(first_message->valuestring);
+	}
+	first_message_name = cJSON_GetObjectItemCaseSensitive(data, "first_message_name");
+	if(!cJSON_IsString(author) || first_message_name == NULL || first_message_name->valuestring == NULL){
+		#ifdef CRAW_DEBUG_MODE
+		printf("first_message_name not found");
+		#endif
+	}else{
+		ptr->first_message_name = strdup(first_message_name->valuestring);
+	}
+	likes = cJSON_GetObjectItemCaseSensitive(data, "likes");
+	if(!cJSON_IsString(author) || likes == NULL ||likes->valueint == NULL){
+		#ifdef CRAW_DEBUG_MODE
+		printf("likes not found");
+		#endif
+	}else{
+		ptr->likes = likes->valueint;
+	}
+	link_title = cJSON_GetObjectItemCaseSensitive(data, "link_title");
+	if(!cJSON_IsString(author) || link_title == NULL || link_title->valuestring == NULL){
+		#ifdef CRAW_DEBUG_MODE
+		printf("link_title not found");
+		#endif
+	}else{
+		ptr->link_title = strdup(link_title->valuestring);
+	}
+	name = cJSON_GetObjectItemCaseSensitive(data, "name");
+	if(!cJSON_IsString(author) || name == NULL || name->valuestring == NULL){
+		#ifdef CRAW_DEBUG_MODE
+		printf("name not found");
+		#endif
+	}else{
+		ptr->name = strdup(name->valuestring);
+	}
+	parent_id = cJSON_GetObjectItemCaseSensitive(data, "parent_id");
+	if(!cJSON_IsString(author) || parent_id == NULL || parent_id->valuestring == NULL){
+		#ifdef CRAW_DEBUG_MODE
+		printf("parent_id not found");
+		#endif
+	}else{
+		ptr->parent_id = strdup(parent_id->valuestring);
+	}
+	replies = cJSON_GetObjectItemCaseSensitive(data, "replies");
+	if(!cJSON_IsString(author) || replies == NULL || replies->valuestring == NULL){
+		#ifdef CRAW_DEBUG_MODE
+		printf("replies not found");
+		#endif
+	}else{
+		ptr->replies = strdup(replies->valuestring);
+	}
+	subject = cJSON_GetObjectItemCaseSensitive(data, "subject");
+	if(!cJSON_IsString(author) || subject == NULL){
+		#ifdef CRAW_DEBUG_MODE
+		printf("subject not found");
+		#endif
+	}else{
+		ptr->subject = strdup(subject->valuestring);
+	}
+	subreddit = cJSON_GetObjectItemCaseSensitive(data, "subreddit");
+	if(!cJSON_IsString(author) || subreddit == NULL || subreddit->valuestring == NULL){
 		#ifdef CRAW_DEBUG_MODE
 		printf("author not found");
 		#endif
 	}else{
-		ptr->author = strdup(author->valuestring);
+		ptr->subreddit = strdup(subreddit->valuestring);
 	}
-
 }
 /*
 please do not kill me for this shitty code im just 16 UwU 

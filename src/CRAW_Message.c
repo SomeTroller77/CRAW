@@ -35,6 +35,36 @@ CRAW_Message *CRAW_Message_Init(){
     return malloc(sizeof(CRAW_Message));
 }
 
+CRAWcode CRAW_Message_getInbox(CRAW *handle, CRAW_Listing *ptr){
+    char *raw = getData(handle, "/message/inbox");
+    if(raw == NULL){
+        return CRAW_GRAB_ERROR;
+    }
+    const cJSON *root = cJSON_Parse(raw);
+    if(root == NULL){
+        return CRAW_PARSE_ERROR;
+    }
+    const cJSON *data = cJSON_GetObjectItemCaseSensitive(root, "data");
+    if(data == NULL){
+        return CRAW_PARSE_ERROR;
+    }
+    CRAW_load_listing(data, ptr);
+    cJSON_Delete(root);
+    free(raw);
+    return CRAW_OK;
+}
+
 void CRAW_Message_free(CRAW_Message *handle){
+    free(handle->author);
+    free(handle->body);
+    free(handle->context);
+    free(handle->first_message);
+    free(handle->first_message_name);
+    free(handle->link_title);
+    free(handle->name);
+    free(handle->parent_id);
+    free(handle->replies);
+    free(handle->subject);
+    free(handle->subreddit);
     free(handle);
 }

@@ -28,5 +28,5 @@ install(DIRECTORY include/
     FILES_MATCHING PATTERN "*.h"
 )
 
-add_executable(test tests/CRAW_Test_1.c)
-target_link_libraries(test CRAW curl)
+add_executable(CRAW_Test_1 tests/CRAW_Test_1.c)
+target_link_libraries(CRAW_Test_1 CRAW curl)

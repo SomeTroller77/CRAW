@@ -40,12 +40,16 @@ CRAW_Listing *CRAW_Listing_Init(){
 void CRAW_Listing_Free(CRAW_Listing *ptr){
     if(!ptr) return;
     for(int i = 0; i < ptr->array_size; i++){
-        if(ptr->children[i].type == CRAW_ACCOUNT){
+        if(ptr->children[i].data != NULL){
+            if(ptr->children[i].type == CRAW_ACCOUNT){
             CRAW_Account_Free(ptr->children[i].data);
-        }else if(ptr->children[i].type == CRAW_SUBREDDIT){
-            CRAW_Subreddit_Free(ptr->children[i].data);
-        }else if(ptr->children[i].type == CRAW_LINK){
-            CRAW_Link_Free(ptr->children[i].data);
+            }else if(ptr->children[i].type == CRAW_SUBREDDIT){
+                CRAW_Subreddit_Free(ptr->children[i].data);
+            }else if(ptr->children[i].type == CRAW_LINK){
+                CRAW_Link_Free(ptr->children[i].data);
+            }else if(ptr->children[i].type == CRAW_MESSAGE){
+                CRAW_Message_free(ptr->children[i].data);
+            }
         }
     }
     free(ptr->children);
