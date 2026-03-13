@@ -15,7 +15,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install -y build-essential cmake libcurl4-openssl-dev valgrind
+        sudo apt install -y build-essential cmake libcurl4-openssl-dev valgrind libcjson-dev
 
     - name: Build project
       run: |
@@ -24,7 +24,7 @@ jobs:
 
     - name: Run example / test
       run: |
-        ./test || true
+        ./CRAW_Test_1 || true
 
     - name: Run valgrind
       run: |

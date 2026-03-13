@@ -25,7 +25,7 @@ YOU HAVE BEEN WARNED
 #include "../include/CRAW_PRIVATE.h"
 #include "CRAW_Main.h"
 #include<curl/curl.h>
-#include "../include/cJSON.h"
+#include <cjson/cJSON.h>
 #include<stdlib.h>
 #include<string.h>
 #include "../include/CRAW_Account.h"

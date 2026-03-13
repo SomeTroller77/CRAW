@@ -64,12 +64,14 @@ If you want to use this Wrapper, you need a reddit client id and secret key whic
 
 NOTE:- Non OAuth endpoints have been implemented aswell, so the library can also be used without an API key
 ## How to build?
-The project has a dependency of libcurl, it can be installed in linux by
+The project has a dependency of libcurl and cJSON, it can be installed in linux by
 
 Ubuntu:
 ```
-# sudo apt-get install curl
+# means to run the command as root 
+# apt-get install curl
 # apt-get install libcurl4-openssl-dev
+# apt-get install libcjson-dev
 ```
 Clone this repo using
 ```

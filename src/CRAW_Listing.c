@@ -24,7 +24,7 @@ YOU HAVE BEEN WARNED
 #include <string.h>
 #include <stdlib.h>
 #include <curl/curl.h>
-#include "../include/cJSON.h"
+#include <cjson/cJSON.h>
 #define CRAW_PRIVATE_DO_NOT_MESS
 #include "../include/CRAW_PRIVATE.h"
 #include <stdlib.h>

@@ -18,6 +18,17 @@ if(CURL_FOUND)
 else()
     message(FATAL_ERROR "Could not find CURL")
 endif()
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(CJSON REQUIRED libcjson)
+if(CJSON_FOUND)
+    message(STATUS "Found CJSON version: ${CJSON_VERSION_STRING}")
+    message(STATUS "Using CJSON include dir(s): ${CJSON_INCLUDE_DIRS}")
+    message(STATUS "Using CJSON lib(s): ${CJSON_LIBRARIES}")
+    target_include_directories(${PROJECT_NAME} PRIVATE ${CJSON_INCLUDE_DIRS})
+    target_link_libraries(${PROJECT_NAME} ${CJSON_LIBRARIES})
+else()
+    message(FATAL_ERROR "Could not find CURL")
+endif()
 
 install(TARGETS CRAW
     LIBRARY DESTINATION lib
