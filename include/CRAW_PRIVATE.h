@@ -26,7 +26,7 @@ YOU HAVE BEEN WARNED
 #include "CRAW.h"
 #include<curl/curl.h>
 #include<stdlib.h>
-#include "cJSON.h"
+#include <cjson/cJSON.h>
 #ifdef _WIN32
 #include<Windows.h>
 #define SLEEP(time) Sleep(time)
