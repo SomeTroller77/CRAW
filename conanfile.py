@@ -1,29 +1,38 @@
 from conan import ConanFile
 from conan.tools.cmake import CMake, cmake_layout
+from conan.tools.files import get, copy
+import os
+
 
 class CrawConan(ConanFile):
     name = "craw"
-    version = "1.0"
+    description = "C Reddit API wrapper"
+    license = "MIT"
+    url = "https://github.com/YOUR_USERNAME/craw"
+    homepage = "https://github.com/YOUR_USERNAME/craw"
+    topics = ("reddit", "api", "c")
+
     package_type = "library"
 
-    license = "MIT"
-    url = "https://github.com/SomeTroller77/CRAW"
-    description = "C Reddit API wrapper"
+    settings = "os", "arch", "compiler", "build_type"
 
-    settings = "os", "compiler", "build_type", "arch"
-
-    exports_sources = "CMakeLists.txt", "src/*", "include/*", "tests/*"
     options = {"shared": [True, False]}
     default_options = {"shared": False}
+
+    exports_sources = "CMakeLists.txt", "src/*", "include/*"
+
     generators = "CMakeToolchain", "CMakeDeps"
 
     requires = (
-        "libcurl/8.18.0",
-        "cjson/1.7.17"
+        "libcurl/8.18.0"
+        "cjson/1.7.17",
     )
 
     def layout(self):
         cmake_layout(self)
+
+    def source(self):
+        get(self, **self.conan_data["sources"][self.version], strip_root=True)
 
     def build(self):
         cmake = CMake(self)
