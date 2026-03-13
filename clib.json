@@ -1,7 +1,7 @@
 {
     "name": "SomeTroller77/CRAW",
     "version": "1.0.0",
-    "repo": "https://github.com/SomeTroller77/CRAW",
+    "repo": "SomeTroller77/CRAW",
     "description": "Lightweight C Reddit API wrapper",
     "keywords": ["reddit", "api", "c"],
     "license": "BSD-3-Clause",
@@ -13,6 +13,5 @@
     ],
     "dependencies": {
         "DaveGamble/cJSON": "*",
-        "curl/curl": "*"
     }
 }
