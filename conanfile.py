@@ -41,7 +41,7 @@ class CrawConan(ConanFile):
             self.tool_requires("pkgconf/[>=2.2 <3]")
 
     def requirements(self):
-        self.requires("libcurl/8.18.0")
+        self.requires("libcurl/8.18.0",transitive_headers=True, transitive_libs=True)
         self.requires("cjson/1.7.17")
 
     def generate(self):
@@ -64,4 +64,4 @@ class CrawConan(ConanFile):
         cmake.install()
 
     def package_info(self):
-        self.cpp_info.libs = ["craw"]
+        self.cpp_info.libs = ["CRAW"]
