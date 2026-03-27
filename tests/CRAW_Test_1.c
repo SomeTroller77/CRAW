@@ -15,7 +15,11 @@ int main(){
 		return 1;
 	}
 	CRAW_Listing *a = CRAW_Listing_Init();
-	CRAW_getTopPosts(handle, a);
+	CRAWcode result = CRAW_getTopPosts(handle, a);
+	if(result != CRAW_OK){
+		printf("Error code: %d", result);
+		return 1;
+	}
 	CRAW_Link *test = a->children[2].data;
 	printf("post link:- %s\nTotal posts:- %d", test->permalink, a->array_size);
 	CRAW_Listing_Free(a);
