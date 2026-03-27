@@ -1,0 +1,16 @@
+name: CRAW CI (conan)
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: conan-io/setup-conan@v1
+  
+    - run: conan create . --version 0.0.0 --build=compatible
