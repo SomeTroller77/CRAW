@@ -19,12 +19,12 @@ jobs:
 
     - name: Build project
       run: |
-        cmake .
+        cmake . -DBUILD_TESTING=ON
         make
 
     - name: Run example / test
       run: |
-        ./CRAW_Test_1 || true
+        ctest || true
 
     - name: Run valgrind
       run: |
