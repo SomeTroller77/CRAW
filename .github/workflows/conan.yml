@@ -1,0 +1,20 @@
+name: CRAW CI (conan)
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v6
+
+    - uses: conan-io/setup-conan@v1
+  
+    - run: conan create . --version 0.0.0 --build=compatible

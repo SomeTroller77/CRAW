@@ -33,12 +33,12 @@ YOU HAVE BEEN WARNED
 
 
 // initialization function for the struct CRAW_Subreddit, returns a pointer
-CRAW_Subreddit *CRAW_Subreddit_Init(){
+CRAW_Subreddit *CRAW_Subreddit_Init(void){
     return calloc(1, sizeof(CRAW_Subreddit));
 }
 
 // get info about a subreddit
-CRAWcode CRAW_Subreddit_getInfo(CRAW *handle, CRAW_Subreddit *subreddit,char *subreddit_name){
+CRAWcode CRAW_Subreddit_getInfo(const CRAW *handle, CRAW_Subreddit *subreddit,char *subreddit_name){
     // adding the strlen of all base url and subreddit name to be used to allocate memory
     size_t len = strlen("/r//about/") + strlen(subreddit_name) + 1;
     char *suburl = malloc(len);
@@ -77,7 +77,7 @@ CRAWcode CRAW_Subreddit_getInfo(CRAW *handle, CRAW_Subreddit *subreddit,char *su
     return CRAW_OK;
 }
 
-CRAWcode CRAW_Subreddit_getHotPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name){
+CRAWcode CRAW_Subreddit_getHotPosts(const CRAW *handle, CRAW_Listing *list, char *subreddit_name){
     // adding the strlen of all base url and subreddit name to be used to allocate memory
     size_t len = strlen("/r//hot/") + strlen(subreddit_name) + 1;
     char *suburl = malloc(len);
@@ -115,7 +115,7 @@ CRAWcode CRAW_Subreddit_getHotPosts(CRAW *handle, CRAW_Listing *list, char *subr
     free(suburl);
     return CRAW_OK;
 }
-CRAWcode CRAW_Subreddit_getNewPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name){
+CRAWcode CRAW_Subreddit_getNewPosts(const CRAW *handle, CRAW_Listing *list, char *subreddit_name){
     // adding the strlen of all base url and subreddit name to be used to allocate memory
     size_t len = strlen("/r//new/") + strlen(subreddit_name) + 1;
     char *suburl = malloc(len);
@@ -153,7 +153,7 @@ CRAWcode CRAW_Subreddit_getNewPosts(CRAW *handle, CRAW_Listing *list, char *subr
     free(suburl);
     return CRAW_OK;
 }
-CRAWcode CRAW_Subreddit_getRisingPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name){
+CRAWcode CRAW_Subreddit_getRisingPosts(const CRAW *handle, CRAW_Listing *list, char *subreddit_name){
     // adding the strlen of all base url and subreddit name to be used to allocate memory
     size_t len = strlen("/r//rising/") + strlen(subreddit_name) + 1;
     char *suburl = malloc(len);
@@ -191,7 +191,7 @@ CRAWcode CRAW_Subreddit_getRisingPosts(CRAW *handle, CRAW_Listing *list, char *s
     free(suburl);
     return CRAW_OK;
 }
-CRAWcode CRAW_Subreddit_getTopPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name){
+CRAWcode CRAW_Subreddit_getTopPosts(const CRAW *handle, CRAW_Listing *list, char *subreddit_name){
     // adding the strlen of all base url and subreddit name to be used to allocate memory
     size_t len = strlen("/r//top/") + strlen(subreddit_name) + 1;
     char *suburl = malloc(len);

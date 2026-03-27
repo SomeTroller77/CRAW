@@ -33,7 +33,7 @@ YOU HAVE BEEN WARNED
 
 // The initialization function which is takes the parameters given and loads in the access token and other things from the endpoint 
 
-CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *username, const char *password, const char *user_agent, bool is_oauth){
+CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *username, const char *password, char *user_agent, bool is_oauth){
 	// initializing the memory struct for libcurl
 	struct memory chunk={0};
 	// allocating memory for the struct CRAW which is the base for all the requests to be sent and utilized by other functions
@@ -66,7 +66,6 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
         if(!curlhandle){
             return NULL;
         }
-        CURLcode res;
         chunk.response=NULL;
         // setting curl parameters
         curl_easy_setopt(curlhandle, CURLOPT_URL, "https://www.reddit.com/api/v1/access_token");
@@ -77,7 +76,7 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
         curl_easy_setopt(curlhandle, CURLOPT_USERAGENT, handle->user_agent);
         curl_easy_setopt(curlhandle, CURLOPT_POSTFIELDS, postString);
         // sending the request
-        res=curl_easy_perform(curlhandle);
+        curl_easy_perform(curlhandle);
         if(chunk.response == NULL){
             return NULL;
         }
@@ -107,7 +106,7 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
     }
 	return handle;
 }
-CRAWcode CRAW_getTopPosts(CRAW *handle, CRAW_Listing *list){
+CRAWcode CRAW_getTopPosts(const CRAW *handle, CRAW_Listing *list){
     // sending the fucking request
     char *json = getData(handle, "/top");
     const cJSON *data = NULL;
@@ -137,7 +136,7 @@ CRAWcode CRAW_getTopPosts(CRAW *handle, CRAW_Listing *list){
     return CRAW_OK;
 }
 
-CRAWcode CRAW_getNewPosts(CRAW *handle, CRAW_Listing *list){
+CRAWcode CRAW_getNewPosts(const CRAW *handle, CRAW_Listing *list){
     // sending the fucking request
     char *json = getData(handle, "/new");
    
@@ -169,7 +168,7 @@ CRAWcode CRAW_getNewPosts(CRAW *handle, CRAW_Listing *list){
     return CRAW_OK;
 }
 
-CRAWcode CRAW_getRisingPosts(CRAW *handle, CRAW_Listing *list){
+CRAWcode CRAW_getRisingPosts(const CRAW *handle, CRAW_Listing *list){
     // sending the fucking request
     char *json = getData(handle, "/rising");
    

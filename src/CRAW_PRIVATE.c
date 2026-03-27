@@ -65,11 +65,11 @@ size_t cb(void *buf, size_t size, size_t count, void *userp){
 	mem->response[mem->size]=0;
 	return realbytes;
 }
-char *getData(CRAW *handle, const char *url){
+char *getData(const CRAW *handle, const char *url){
     CURL *curlhandle = curl_easy_init();
 	if(curlhandle == NULL){
 		printf("curl handle didnt init");
-		return;
+		return NULL;
 	}
 	CURLcode res;
 	struct memory chunk={0};
@@ -159,7 +159,7 @@ char *postData(CRAW *handle, const char *url, const char *data){
     CURL *curlhandle = curl_easy_init();
 	if(curlhandle == NULL){
 		printf("curl handle didnt init");
-		return;
+		return NULL;
 	}
 	CURLcode res;
 	struct memory chunk={0};
@@ -692,7 +692,7 @@ void CRAW_load_link(const cJSON *data, CRAW_Link *ptr){
 	}
 }
 
-void CRAW_load_listing(cJSON *data, CRAW_Listing *listing){
+void CRAW_load_listing(const cJSON *data, CRAW_Listing *listing){
 	// same shit, initialize and get fucked
 	const cJSON *after = NULL;
 	const cJSON *dist = NULL;
@@ -804,7 +804,6 @@ void CRAW_load_message(const cJSON *data, CRAW_Message *ptr){
 	const cJSON *replies = NULL;
 	const cJSON *subject = NULL;
 	const cJSON *subreddit = NULL;
-	const cJSON *was_comment = NULL;
 	author = cJSON_GetObjectItemCaseSensitive(data, "author");
 	if(!cJSON_IsString(author) || author == NULL ||author->valuestring == NULL){
 		#ifdef CRAW_DEBUG_MODE
@@ -846,7 +845,7 @@ void CRAW_load_message(const cJSON *data, CRAW_Message *ptr){
 		ptr->first_message_name = strdup(first_message_name->valuestring);
 	}
 	likes = cJSON_GetObjectItemCaseSensitive(data, "likes");
-	if(!cJSON_IsString(author) || likes == NULL ||likes->valueint == NULL){
+	if(!cJSON_IsString(author) || likes == NULL ||likes->valueint == 0){
 		#ifdef CRAW_DEBUG_MODE
 		printf("likes not found");
 		#endif

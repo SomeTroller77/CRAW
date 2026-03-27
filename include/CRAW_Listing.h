@@ -37,6 +37,6 @@ typedef struct{
 } CRAW_Listing;
 
 //init and free
-CRAW_Listing *CRAW_Listing_Init();
+CRAW_Listing *CRAW_Listing_Init(void);
 void CRAW_Listing_Free(CRAW_Listing *ptr);
 #endif

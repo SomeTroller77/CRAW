@@ -48,11 +48,11 @@ typedef struct CRAW_Reddit_Subreddit{
 } CRAW_Subreddit;
 
 // the init function to initialize a CRAW_Subreddit
-CRAW_Subreddit *CRAW_Subreddit_Init();
+CRAW_Subreddit *CRAW_Subreddit_Init(void);
 // to get info about a subreddit
-CRAWcode CRAW_Subreddit_getInfo(CRAW *handle, CRAW_Subreddit *subreddit, char *subreddit_name);
-CRAWcode CRAW_Subreddit_getHotPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name);
-CRAWcode CRAW_Subreddit_getNewPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name);
+CRAWcode CRAW_Subreddit_getInfo(const CRAW *handle, CRAW_Subreddit *subreddit, char *subreddit_name);
+CRAWcode CRAW_Subreddit_getHotPosts(const CRAW *handle, CRAW_Listing *list, char *subreddit_name);
+CRAWcode CRAW_Subreddit_getNewPosts(const CRAW *handle, CRAW_Listing *list, char *subreddit_name);
 /*
 
 	CRAWcode CRAW_Subreddit_getTopPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name)
@@ -60,7 +60,7 @@ CRAWcode CRAW_Subreddit_getNewPosts(CRAW *handle, CRAW_Listing *list, char *subr
 		- To implement post data function to get TopPosts and Controversial Posts working
 
 */
-CRAWcode CRAW_Subreddit_getRisingPosts(CRAW *handle, CRAW_Listing *list, char *subreddit_name);
+CRAWcode CRAW_Subreddit_getRisingPosts(const CRAW *handle, CRAW_Listing *list, char *subreddit_name);
 // function to free the CRAW_Subreddit pointer efficiently
 void CRAW_Subreddit_Free(CRAW_Subreddit *ptr);
 #endif

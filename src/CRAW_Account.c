@@ -37,7 +37,7 @@ YOU HAVE BEEN WARNED
 #endif
 
 // initializing the CRAW_Account struct
-CRAW_Account *CRAW_Account_Init(){
+CRAW_Account *CRAW_Account_Init(void){
 	CRAW_Account *handle=malloc(sizeof(CRAW_Account));
 	if (handle == NULL){
 	    return NULL;

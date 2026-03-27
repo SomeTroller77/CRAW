@@ -31,16 +31,16 @@ YOU HAVE BEEN WARNED
 #include<string.h>
 #include "../include/CRAW.h"
 
-CRAW_Message *CRAW_Message_Init(){
+CRAW_Message *CRAW_Message_Init(void){
     return malloc(sizeof(CRAW_Message));
 }
 
-CRAWcode CRAW_Message_getInbox(CRAW *handle, CRAW_Listing *ptr){
+CRAWcode CRAW_Message_getInbox(const CRAW *handle, CRAW_Listing *ptr){
     char *raw = getData(handle, "/message/inbox");
     if(raw == NULL){
         return CRAW_GRAB_ERROR;
     }
-    const cJSON *root = cJSON_Parse(raw);
+    cJSON *root = cJSON_Parse(raw);
     if(root == NULL){
         return CRAW_PARSE_ERROR;
     }
