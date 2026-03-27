@@ -31,11 +31,11 @@ typedef struct CRAW_Reddit_Bot{
 	const char *secret_key;
 	const char *username;
 	const char *password;
-	const char *user_agent;
+	char *user_agent;
 	bool is_authenticated;
 	// the struct which stores info about the last request aswell as tracks the info of ratelimiting
 	struct internalInfo{
-		const char *token_header;
+		char *token_header;
 		long error_code;
 		int ratelimit_remaining;
 		int ratelimit_reset;
@@ -74,10 +74,10 @@ typedef enum{
 } CRAW_Vote;
 
 // the init function for the handle of the bot, must be run to be able to use other functions
-CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *username, const char *password, const char *user_agent, bool is_oauth);
-CRAWcode CRAW_getTopPosts(CRAW *handle, CRAW_Listing *list);
-CRAWcode CRAW_getNewPosts(CRAW *handle, CRAW_Listing *list);
-CRAWcode CRAW_getRisingPosts(CRAW *handle, CRAW_Listing *list);
+CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *username, const char *password, char *user_agent, bool is_oauth);
+CRAWcode CRAW_getTopPosts(const CRAW *handle, CRAW_Listing *list);
+CRAWcode CRAW_getNewPosts(const CRAW *handle, CRAW_Listing *list);
+CRAWcode CRAW_getRisingPosts(const CRAW *handle, CRAW_Listing *list);
 // the function to safely free the handle of a bot
 void CRAW_Free(CRAW *handle);
 

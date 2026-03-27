@@ -31,7 +31,7 @@ YOU HAVE BEEN WARNED
 #include<string.h>
 #include "../include/CRAW.h"
 
-CRAW_Listing *CRAW_Listing_Init(){
+CRAW_Listing *CRAW_Listing_Init(void){
     return malloc(sizeof(CRAW_Listing));
 }
 

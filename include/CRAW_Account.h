@@ -39,7 +39,7 @@ typedef struct {
 
 CRAWcode CRAW_Account_me(CRAW *handle, CRAW_Account *accHandle);
 CRAWcode CRAW_Account_getAbout(CRAW *handle, char *username, CRAW_Account *accHandle);
-CRAW_Account *CRAW_Account_Init();
+CRAW_Account *CRAW_Account_Init(void);
 void CRAW_Account_Free(CRAW_Account *accHandle);
 
 #endif

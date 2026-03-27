@@ -31,7 +31,7 @@ YOU HAVE BEEN WARNED
 #include<string.h>
 #include "../include/CRAW.h"
 
-CRAW_Link *CRAW_Link_Init(){
+CRAW_Link *CRAW_Link_Init(void){
     return malloc(sizeof(CRAW_Link));
 }
 void CRAW_Link_Free(CRAW_Link *ptr){
