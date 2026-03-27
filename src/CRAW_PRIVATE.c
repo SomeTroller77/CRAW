@@ -804,7 +804,6 @@ void CRAW_load_message(const cJSON *data, CRAW_Message *ptr){
 	const cJSON *replies = NULL;
 	const cJSON *subject = NULL;
 	const cJSON *subreddit = NULL;
-	const cJSON *was_comment = NULL;
 	author = cJSON_GetObjectItemCaseSensitive(data, "author");
 	if(!cJSON_IsString(author) || author == NULL ||author->valuestring == NULL){
 		#ifdef CRAW_DEBUG_MODE
@@ -846,7 +845,7 @@ void CRAW_load_message(const cJSON *data, CRAW_Message *ptr){
 		ptr->first_message_name = strdup(first_message_name->valuestring);
 	}
 	likes = cJSON_GetObjectItemCaseSensitive(data, "likes");
-	if(!cJSON_IsString(author) || likes == NULL ||likes->valueint == NULL){
+	if(!cJSON_IsString(author) || likes == NULL ||likes->valueint == 0){
 		#ifdef CRAW_DEBUG_MODE
 		printf("likes not found");
 		#endif

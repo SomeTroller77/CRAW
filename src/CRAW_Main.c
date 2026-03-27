@@ -66,7 +66,6 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
         if(!curlhandle){
             return NULL;
         }
-        CURLcode res;
         chunk.response=NULL;
         // setting curl parameters
         curl_easy_setopt(curlhandle, CURLOPT_URL, "https://www.reddit.com/api/v1/access_token");
@@ -77,7 +76,7 @@ CRAW *CRAW_Init(const char *client_id, const char *secret_key, const char *usern
         curl_easy_setopt(curlhandle, CURLOPT_USERAGENT, handle->user_agent);
         curl_easy_setopt(curlhandle, CURLOPT_POSTFIELDS, postString);
         // sending the request
-        res=curl_easy_perform(curlhandle);
+        curl_easy_perform(curlhandle);
         if(chunk.response == NULL){
             return NULL;
         }
